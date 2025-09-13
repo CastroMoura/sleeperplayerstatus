@@ -91,7 +91,31 @@
         const players = await playersRes.json();
 
         resultado.innerHTML = ""; // limpa antes de exibir
+     --- muita calma
 
+             // Função para cor do status
+      function getStatusColor(status) {
+        switch (status) {
+          case "Out": return "#e53935";        // vermelho
+          case "Questionable": return "#fb8c00"; // laranja
+          case "Doubtful": return "#ef6c00";     // laranja escuro
+          case "IR": return "#8e24aa";           // roxo
+          case "Suspended": return "#616161";    // cinza
+          default: return "#1e88e5";             // azul
+        }
+      }
+
+      // Monta times por usuário
+      rosters.forEach(r => {
+        const ownerName = userMap[r.owner_id] || "Time sem dono";
+
+        const teamDiv = document.createElement("div");
+        teamDiv.className = "team";
+        teamDiv.innerHTML = `<h2>${ownerName}</h2>`;
+		
+
+        -----calma ai
+        
         // Monta times por usuário
         rosters.forEach(r => {
           const ownerName = userMap[r.owner_id] || "Time sem dono";
@@ -99,62 +123,70 @@
           teamDiv.className = "team";
           teamDiv.innerHTML = `<h2>${ownerName}</h2>`;
 
-          // Titulares
-          const startersSection = document.createElement("div");
-          startersSection.className = "section";
-          startersSection.innerHTML = "<h3>Titulares</h3>";
-          
-          if (r.starters && r.starters.length > 0) {
-            r.starters.forEach(id => {
+const startersSection = document.createElement("div");
+        startersSection.className = "section";
+        startersSection.innerHTML = "<h3>Titulares</h3>";
+
+        let startersCount = 0;
+        if (r.starters && r.starters.length > 0) {
+          r.starters.forEach(id => {
+            const p = players[id];
+            if (p && p.injury_status && p.injury_status !== "Healthy") {
+              startersCount++;
+              const color = getStatusColor(p.injury_status);
+              const card = document.createElement("div");
+              card.className = "player-card";
+              card.innerHTML = `
+                <strong>${p.full_name}</strong> (${p.position}, ${p.team || "FA"})<br>
+                Status: <span style="color:${color}; font-weight:bold;">${p.injury_status}</span>
+              `;
+              startersSection.appendChild(card);
+            }
+          });
+        }
+        if (startersCount === 0) {
+          startersSection.innerHTML += "<p><em>Nenhum titular com status relevante.</em></p>";
+        }
+
+
+     // Banco
+        const benchSection = document.createElement("div");
+        benchSection.className = "section";
+        benchSection.innerHTML = "<h3>Banco</h3>";
+
+        let benchCount = 0;
+        if (r.players && r.players.length > 0) {
+          const benchIds = r.players.filter(id => !r.starters.includes(id));
+          if (benchIds.length > 0) {
+            benchIds.forEach(id => {
               const p = players[id];
-              if (p) {
+              if (p && p.injury_status && p.injury_status !== "Healthy") {
+                benchCount++;
+                const color = getStatusColor(p.injury_status);
                 const card = document.createElement("div");
                 card.className = "player-card";
                 card.innerHTML = `
                   <strong>${p.full_name}</strong> (${p.position}, ${p.team || "FA"})<br>
-                  Status: ${p.injury_status || "Healthy"}
+                  Status: <span style="color:${color}; font-weight:bold;">${p.injury_status}</span>
                 `;
-                startersSection.appendChild(card);
+                benchSection.appendChild(card);
               }
             });
-          } else {
-            startersSection.innerHTML += "<p><em>Sem titulares.</em></p>";
           }
+        }
+        if (benchCount === 0) {
+          benchSection.innerHTML += "<p><em>Nenhum jogador do banco com status relevante.</em></p>";
+        }
 
-          // Banco
-          const benchSection = document.createElement("div");
-          benchSection.className = "section";
-          benchSection.innerHTML = "<h3>Banco</h3>";
-
-          if (r.players && r.players.length > 0) {
-            const benchIds = r.players.filter(id => !r.starters.includes(id));
-            if (benchIds.length > 0) {
-              benchIds.forEach(id => {
-                const p = players[id];
-                if (p) {
-                  const card = document.createElement("div");
-                  card.className = "player-card";
-                  card.innerHTML = `
-                    <strong>${p.full_name}</strong> (${p.position}, ${p.team || "FA"})<br>
-                    Status: ${p.injury_status || "Healthy"}
-                  `;
-                  benchSection.appendChild(card);
-                }
-              });
-            } else {
-              benchSection.innerHTML += "<p><em>Nenhum jogador no banco.</em></p>";
-            }
-          }
-
-          teamDiv.appendChild(startersSection);
-          teamDiv.appendChild(benchSection);
-          resultado.appendChild(teamDiv);
-        });
-      } catch (err) {
-        resultado.innerHTML = "<p style='color:red;'>Erro ao buscar dados. Verifique o League ID.</p>";
-        console.error(err);
-      }
+        teamDiv.appendChild(startersSection);
+        teamDiv.appendChild(benchSection);
+        resultado.appendChild(teamDiv);
+      });
+    } catch (err) {
+      resultado.innerHTML = "<p style='color:red;'>Erro ao buscar dados. Verifique o League ID.</p>";
+      console.error(err);
     }
-  </script>
+  }
+</script>
 </body>
 </html>
