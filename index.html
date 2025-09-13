@@ -95,8 +95,7 @@
         const players = await playersRes.json();
 
         resultado.innerHTML = ""; // limpa antes de exibir
-     --- muita calma
-
+    
              // Função para cor do status
       function getStatusColor(status) {
         switch (status) {
@@ -116,10 +115,7 @@
         const teamDiv = document.createElement("div");
         teamDiv.className = "team";
         teamDiv.innerHTML = `<h2>${ownerName}</h2>`;
-		
-
-        -----calma ai
-        
+		    
         // Monta times por usuário
         rosters.forEach(r => {
           const ownerName = userMap[r.owner_id] || "Time sem dono";
