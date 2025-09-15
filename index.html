@@ -117,7 +117,7 @@
     
     <label for="leagueId">Informe o League ID:</label><br>
     <input type="text" id="leagueId" placeholder="Ex: 1234567890"><br>
-    <button onclick="buscar()">Vamos ver</button>
+    <button onclick="buscar()">Revisar Times</button>
     
     <div id="resultado"></div>
   </div>
@@ -174,7 +174,7 @@
         // Titulares
         const startersSection = document.createElement("div");
         startersSection.className = "section";
-        startersSection.innerHTML = "<h3>Titulares</h3>";
+        startersSection.innerHTML = "<h3>Baleados</h3>";
 
         let startersCount = 0;
         (r.starters || []).forEach(id => {
@@ -193,7 +193,7 @@
         });
 
         if (startersCount === 0) {
-          startersSection.innerHTML += "<p><em>Nenhum titular com status relevante.</em></p>";
+          startersSection.innerHTML += "<p><em>Todo mundo pronto para a rodada.</em></p>";
         }
 
         teamDiv.appendChild(startersSection);
