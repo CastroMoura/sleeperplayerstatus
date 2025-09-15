@@ -6,59 +6,82 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
 	
-  <title>Status Jogadores - Sleeper - v.3 - 15/09 </title>
+  <title>Status Jogadores - Sleeper - v.15092504 - 15/09 </title>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 30px;
-      background: #f4f4f4;
+      background: url('https://cdn.pixabay.com/photo/2017/08/30/01/05/american-football-2699470_1280.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
     }
+
     h1 {
-      color: #333;
+      color: #ffcc00;
+      text-shadow: 2px 2px 5px #000;
     }
+
     input, button {
       padding: 8px;
       font-size: 16px;
       margin: 5px 0;
     }
+
+    input {
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      padding: 10px;
+    }
+
     button {
       cursor: pointer;
-      background: #4CAF50;
+      background: #0066cc;
       color: white;
       border: none;
       border-radius: 5px;
+      padding: 10px 15px;
+      font-weight: bold;
+      box-shadow: 2px 2px 4px rgba(0,0,0,0.5);
     }
     button:hover {
-      background: #45a049;
+      background: #004d99;
     }
+
     .team {
-      background: #fff;
+      background: rgba(0, 0, 0, 0.7);
       margin: 20px 0;
       padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.6);
     }
+
     .team h2 {
       margin-top: 0;
-      color: #222;
+      color: #ffcc00;
+      text-shadow: 1px 1px 3px #000;
     }
+
     .section {
       margin-top: 10px;
       padding: 10px;
-      background: #f9f9f9;
+      background: rgba(255, 255, 255, 0.1);
       border-radius: 6px;
     }
+
     .section h3 {
       margin: 5px 0;
       font-size: 16px;
-      color: #444;
+      color: #fff;
+      text-shadow: 1px 1px 3px #000;
     }
+
     .player-card {
-      background: #fafafa;
+      background: rgba(255, 255, 255, 0.15);
       margin: 5px 0;
       padding: 8px;
       border-radius: 5px;
-      border: 1px solid #ddd;
+      border: 1px solid rgba(255,255,255,0.3);
+      color: #fff;
     }
   </style>
 </head>
@@ -79,7 +102,6 @@
     resultado.innerHTML = "<p>Buscando jogadores...</p>";
     
     try {
-      // Busca usuários
       const usersRes = await fetch(`https://api.sleeper.app/v1/league/${leagueId}/users`);
       const users = await usersRes.json();
       const userMap = {};
@@ -87,29 +109,25 @@
         userMap[u.user_id] = u.display_name;
       });
 
-      // Busca rosters
       const rostersRes = await fetch(`https://api.sleeper.app/v1/league/${leagueId}/rosters`);
       const rosters = await rostersRes.json();
 
-      // Busca jogadores NFL
       const playersRes = await fetch("https://api.sleeper.app/v1/players/nfl");
       const players = await playersRes.json();
 
-      resultado.innerHTML = ""; // limpa antes de exibir
+      resultado.innerHTML = "";
 
-      // Função para cor do status
       function getStatusColor(status) {
         switch (status) {
-          case "Out": return "#e53935";        // vermelho
-          case "Questionable": return "#fb8c00"; // laranja
-          case "Doubtful": return "#ef6c00";     // laranja escuro
-          case "IR": return "#8e24aa";           // roxo
-          case "Suspended": return "#616161";    // cinza
-          default: return "#1e88e5";             // azul (outros casos)
+          case "Out": return "#ff4d4d";       
+          case "Questionable": return "#ff9933"; 
+          case "Doubtful": return "#cc6600";     
+          case "IR": return "#cc33ff";           
+          case "Suspended": return "#cccccc";    
+          default: return "#66ccff";             
         }
       }
 
-      // Adiciona nome do time (se houver) e ordena alfabeticamente
       rosters.forEach(r => {
         r.ownerName = userMap[r.owner_id] || "Time sem dono";
         r.teamName = r.metadata?.team_name || "Sem nome definido";
@@ -117,13 +135,11 @@
 
       rosters.sort((a, b) => a.teamName.localeCompare(b.teamName));
 
-      // Monta times
       rosters.forEach(r => {
         const teamDiv = document.createElement("div");
         teamDiv.className = "team";
         teamDiv.innerHTML = `<h2>${r.teamName} — ${r.ownerName}</h2>`;
 
-        // Titulares
         const startersSection = document.createElement("div");
         startersSection.className = "section";
         startersSection.innerHTML = "<h3>Titulares</h3>";
