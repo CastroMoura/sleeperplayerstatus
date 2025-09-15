@@ -7,7 +7,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 	
-  <title>Status Jogadores - Sleeper - v.3 </title>
+  <title>Status Jogadores - Sleeper - v.3 - 15/09 </title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -65,7 +65,7 @@
 </head>
 <body>
 	Aquela ajudinha para conferir os jogadores que tão fora da rodada.
-  <h1>Hora dos Ajustes - Quem tá ok e Quem tá fora?(Sleeper)</h1>
+  <h1>Hora dos Ajustes - Quem tá ok e Quem tá fora?(Sleeper) - v15092501 </h1>
   
   <label for="leagueId">Informe o League ID:</label><br>
   <input type="text" id="leagueId" placeholder="Ex: 1234567890"><br>
@@ -106,8 +106,37 @@
           case "Doubtful": return "#ef6c00";     // laranja escuro
           case "IR": return "#8e24aa";           // roxo
           case "Suspended": return "#616161";    // cinza
-          default: return "#1e88e5";             // azul
+          default: return "#1e88e5";             // azul (outros casos)
         }
+      }
+
+      // Função para renderizar jogadores com status relevante
+      function renderPlayers(ids, section, title) {
+        const sec = document.createElement("div");
+        sec.className = "section";
+        sec.innerHTML = `<h3>${title}</h3>`;
+        let count = 0;
+
+        ids.forEach(id => {
+          const p = players[id];
+          if (p?.injury_status && p.injury_status !== "Healthy") {
+            count++;
+            const color = getStatusColor(p.injury_status);
+            const card = document.createElement("div");
+            card.className = "player-card";
+            card.innerHTML = `
+              <strong>${p.full_name}</strong> (${p.position}, ${p.team || "FA"})<br>
+              Status: <span style="color:${color}; font-weight:bold;">${p.injury_status}</span>
+            `;
+            sec.appendChild(card);
+          }
+        });
+
+        if (count === 0) {
+          sec.innerHTML += "<p><em>Nenhum jogador com status relevante.</em></p>";
+        }
+
+        section.appendChild(sec);
       }
 
       // Monta times
@@ -118,60 +147,12 @@
         teamDiv.innerHTML = `<h2>${ownerName}</h2>`;
 
         // Titulares
-        const startersSection = document.createElement("div");
-        startersSection.className = "section";
-        startersSection.innerHTML = "<h3>Titulares</h3>";
-
-        let startersCount = 0;
-        if (r.starters && r.starters.length > 0) {
-          r.starters.forEach(id => {
-            const p = players[id];
-            if (p && p.injury_status && p.injury_status !== "Healthy") {
-              startersCount++;
-              const color = getStatusColor(p.injury_status);
-              const card = document.createElement("div");
-              card.className = "player-card";
-              card.innerHTML = `
-                <strong>${p.full_name}</strong> (${p.position}, ${p.team || "FA"})<br>
-                Status: <span style="color:${color}; font-weight:bold;">${p.injury_status}</span>
-              `;
-              startersSection.appendChild(card);
-            }
-          });
-        }
-        if (startersCount === 0) {
-          startersSection.innerHTML += "<p><em>Nenhum titular com status relevante.</em></p>";
-        }
+        renderPlayers(r.starters || [], teamDiv, "Titulares");
 
         // Banco
-        const benchSection = document.createElement("div");
-        benchSection.className = "section";
-        benchSection.innerHTML = "<h3>Banco</h3>";
+        const benchIds = (r.players || []).filter(id => !(r.starters || []).includes(id));
+        renderPlayers(benchIds, teamDiv, "Banco");
 
-        let benchCount = 0;
-        if (r.players && r.players.length > 0) {
-          const benchIds = r.players.filter(id => !r.starters.includes(id));
-          benchIds.forEach(id => {
-            const p = players[id];
-            if (p && p.injury_status && p.injury_status !== "Healthy") {
-              benchCount++;
-              const color = getStatusColor(p.injury_status);
-              const card = document.createElement("div");
-              card.className = "player-card";
-              card.innerHTML = `
-                <strong>${p.full_name}</strong> (${p.position}, ${p.team || "FA"})<br>
-                Status: <span style="color:${color}; font-weight:bold;">${p.injury_status}</span>
-              `;
-              benchSection.appendChild(card);
-            }
-          });
-        }
-        if (benchCount === 0) {
-          benchSection.innerHTML += "<p><em>Nenhum jogador do banco com status relevante.</em></p>";
-        }
-
-        teamDiv.appendChild(startersSection);
-        teamDiv.appendChild(benchSection);
         resultado.appendChild(teamDiv);
       });
     } catch (err) {
