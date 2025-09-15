@@ -65,7 +65,7 @@
 </head>
 <body>
 	Aquela ajudinha para conferir os jogadores que tão fora da rodada.
-  <h1>Hora dos Ajustes - Quem tá ok e Quem tá fora?(Sleeper) - v15092501 </h1>
+  <h1>Hora dos Ajustes - Quem tá ok e Quem tá fora?(Sleeper) - v15092502 </h1>
   
   <label for="leagueId">Informe o League ID:</label><br>
   <input type="text" id="leagueId" placeholder="Ex: 1234567890"><br>
@@ -110,35 +110,6 @@
         }
       }
 
-      // Função para renderizar jogadores com status relevante
-      function renderPlayers(ids, section, title) {
-        const sec = document.createElement("div");
-        sec.className = "section";
-        sec.innerHTML = `<h3>${title}</h3>`;
-        let count = 0;
-
-        ids.forEach(id => {
-          const p = players[id];
-          if (p?.injury_status && p.injury_status !== "Healthy") {
-            count++;
-            const color = getStatusColor(p.injury_status);
-            const card = document.createElement("div");
-            card.className = "player-card";
-            card.innerHTML = `
-              <strong>${p.full_name}</strong> (${p.position}, ${p.team || "FA"})<br>
-              Status: <span style="color:${color}; font-weight:bold;">${p.injury_status}</span>
-            `;
-            sec.appendChild(card);
-          }
-        });
-
-        if (count === 0) {
-          sec.innerHTML += "<p><em>Nenhum jogador com status relevante.</em></p>";
-        }
-
-        section.appendChild(sec);
-      }
-
       // Monta times
       rosters.forEach(r => {
         const ownerName = userMap[r.owner_id] || "Time sem dono";
@@ -147,12 +118,31 @@
         teamDiv.innerHTML = `<h2>${ownerName}</h2>`;
 
         // Titulares
-        renderPlayers(r.starters || [], teamDiv, "Titulares");
+        const startersSection = document.createElement("div");
+        startersSection.className = "section";
+        startersSection.innerHTML = "<h3>Titulares</h3>";
 
-        // Banco
-        const benchIds = (r.players || []).filter(id => !(r.starters || []).includes(id));
-        renderPlayers(benchIds, teamDiv, "Banco");
+        let startersCount = 0;
+        (r.starters || []).forEach(id => {
+          const p = players[id];
+          if (p?.injury_status && p.injury_status !== "Healthy") {
+            startersCount++;
+            const color = getStatusColor(p.injury_status);
+            const card = document.createElement("div");
+            card.className = "player-card";
+            card.innerHTML = `
+              <strong>${p.full_name}</strong> (${p.position}, ${p.team || "FA"})<br>
+              Status: <span style="color:${color}; font-weight:bold;">${p.injury_status}</span>
+            `;
+            startersSection.appendChild(card);
+          }
+        });
 
+        if (startersCount === 0) {
+          startersSection.innerHTML += "<p><em>Nenhum titular com status relevante.</em></p>";
+        }
+
+        teamDiv.appendChild(startersSection);
         resultado.appendChild(teamDiv);
       });
     } catch (err) {
