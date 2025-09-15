@@ -2,23 +2,36 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
+
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
 	
-  <title>Status Jogadores - Sleeper - v.15092504 - 15/09 </title>
+  <title>Status Jogadores - Sleeper - v.5 - 15/09 </title>
   <style>
     body {
       font-family: Arial, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: flex-start;
+      background: 
+        linear-gradient(to right, rgba(244, 244, 244, 0.95) 60%, rgba(244, 244, 244, 0.2) 80%, transparent 100%),
+        url('A_digital_illustration_depicts_a_football_coach_wi.png') no-repeat right center fixed;
+      background-size: auto 100%;
+    }
+
+    .content {
+      background: rgba(255, 255, 255, 0.92);
+      padding: 30px;
+      border-radius: 10px;
+      max-width: 55%;
       margin: 30px;
-      background: url('https://cdn.pixabay.com/photo/2017/08/30/01/05/american-football-2699470_1280.jpg') no-repeat center center fixed;
-      background-size: cover;
-      color: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
 
     h1 {
-      color: #ffcc00;
-      text-shadow: 2px 2px 5px #000;
+      color: #333;
     }
 
     input, button {
@@ -26,75 +39,89 @@
       font-size: 16px;
       margin: 5px 0;
     }
-
-    input {
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      padding: 10px;
-    }
-
     button {
       cursor: pointer;
-      background: #0066cc;
+      background: #4CAF50;
       color: white;
       border: none;
       border-radius: 5px;
-      padding: 10px 15px;
-      font-weight: bold;
-      box-shadow: 2px 2px 4px rgba(0,0,0,0.5);
     }
     button:hover {
-      background: #004d99;
+      background: #45a049;
     }
 
     .team {
-      background: rgba(0, 0, 0, 0.7);
+      background: #fff;
       margin: 20px 0;
       padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
     .team h2 {
       margin-top: 0;
-      color: #ffcc00;
-      text-shadow: 1px 1px 3px #000;
+      color: #222;
     }
 
     .section {
       margin-top: 10px;
       padding: 10px;
-      background: rgba(255, 255, 255, 0.1);
+      background: #f9f9f9;
       border-radius: 6px;
     }
 
     .section h3 {
       margin: 5px 0;
       font-size: 16px;
-      color: #fff;
-      text-shadow: 1px 1px 3px #000;
+      color: #444;
     }
 
     .player-card {
-      background: rgba(255, 255, 255, 0.15);
+      background: #fafafa;
       margin: 5px 0;
       padding: 8px;
       border-radius: 5px;
-      border: 1px solid rgba(255,255,255,0.3);
-      color: #fff;
+      border: 1px solid #ddd;
+    }
+
+    /* RESPONSIVIDADE */
+    @media (max-width: 1024px) {
+      body {
+        background-size: cover;
+        background-position: right center;
+      }
+      .content {
+        max-width: 70%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        background: #f4f4f4;
+        display: block;
+      }
+      .content {
+        max-width: 100%;
+        margin: 0;
+        border-radius: 0;
+        box-shadow: none;
+        background: #fff;
+      }
     }
   </style>
 </head>
 <body>
-  Aquela ajudinha para conferir os jogadores que tão fora da rodada.
-  <h1>Hora dos Ajustes - Quem tá ok e Quem tá fora? (Sleeper) - v15092503</h1>
-  
-  <label for="leagueId">Informe o League ID:</label><br>
-  <input type="text" id="leagueId" placeholder="Ex: 1234567890"><br>
-  <button onclick="buscar()">Vamos ver</button>
-  
-  <div id="resultado"></div>
-  
+  <div class="content">
+    Aquela ajudinha para conferir os jogadores que tão fora da rodada.
+    <h1>Hora dos Ajustes - Quem tá ok e Quem tá fora? (Sleeper) - v15092505</h1>
+    
+    <label for="leagueId">Informe o League ID:</label><br>
+    <input type="text" id="leagueId" placeholder="Ex: 1234567890"><br>
+    <button onclick="buscar()">Vamos ver</button>
+    
+    <div id="resultado"></div>
+  </div>
+
 <script>
   async function buscar() {
     const leagueId = document.getElementById("leagueId").value.trim();
@@ -102,6 +129,7 @@
     resultado.innerHTML = "<p>Buscando jogadores...</p>";
     
     try {
+      // Busca usuários
       const usersRes = await fetch(`https://api.sleeper.app/v1/league/${leagueId}/users`);
       const users = await usersRes.json();
       const userMap = {};
@@ -109,25 +137,28 @@
         userMap[u.user_id] = u.display_name;
       });
 
+      // Busca rosters
       const rostersRes = await fetch(`https://api.sleeper.app/v1/league/${leagueId}/rosters`);
       const rosters = await rostersRes.json();
 
+      // Busca jogadores NFL
       const playersRes = await fetch("https://api.sleeper.app/v1/players/nfl");
       const players = await playersRes.json();
 
-      resultado.innerHTML = "";
+      resultado.innerHTML = ""; // limpa antes de exibir
 
       function getStatusColor(status) {
         switch (status) {
-          case "Out": return "#ff4d4d";       
-          case "Questionable": return "#ff9933"; 
-          case "Doubtful": return "#cc6600";     
-          case "IR": return "#cc33ff";           
-          case "Suspended": return "#cccccc";    
-          default: return "#66ccff";             
+          case "Out": return "#e53935";
+          case "Questionable": return "#fb8c00";
+          case "Doubtful": return "#ef6c00";
+          case "IR": return "#8e24aa";
+          case "Suspended": return "#616161";
+          default: return "#1e88e5";
         }
       }
 
+      // Adiciona nome do time e ordena
       rosters.forEach(r => {
         r.ownerName = userMap[r.owner_id] || "Time sem dono";
         r.teamName = r.metadata?.team_name || "Sem nome definido";
@@ -140,6 +171,7 @@
         teamDiv.className = "team";
         teamDiv.innerHTML = `<h2>${r.teamName} — ${r.ownerName}</h2>`;
 
+        // Titulares
         const startersSection = document.createElement("div");
         startersSection.className = "section";
         startersSection.innerHTML = "<h3>Titulares</h3>";
@@ -173,6 +205,5 @@
     }
   }
 </script>
-
 </body>
 </html>
