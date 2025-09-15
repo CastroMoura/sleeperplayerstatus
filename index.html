@@ -2,10 +2,9 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
 	
   <title>Status Jogadores - Sleeper - v.3 - 15/09 </title>
   <style>
@@ -64,8 +63,8 @@
   </style>
 </head>
 <body>
-	Aquela ajudinha para conferir os jogadores que tão fora da rodada.
-  <h1>Hora dos Ajustes - Quem tá ok e Quem tá fora?(Sleeper) - v15092503 </h1>
+  Aquela ajudinha para conferir os jogadores que tão fora da rodada.
+  <h1>Hora dos Ajustes - Quem tá ok e Quem tá fora? (Sleeper) - v15092503</h1>
   
   <label for="leagueId">Informe o League ID:</label><br>
   <input type="text" id="leagueId" placeholder="Ex: 1234567890"><br>
@@ -132,7 +131,32 @@
         let startersCount = 0;
         (r.starters || []).forEach(id => {
           const p = players[id];
-          if (p?.injury_s_
+          if (p?.injury_status && p.injury_status !== "Healthy") {
+            startersCount++;
+            const color = getStatusColor(p.injury_status);
+            const card = document.createElement("div");
+            card.className = "player-card";
+            card.innerHTML = `
+              <strong>${p.full_name}</strong> (${p.position}, ${p.team || "FA"})<br>
+              Status: <span style="color:${color}; font-weight:bold;">${p.injury_status}</span>
+            `;
+            startersSection.appendChild(card);
+          }
+        });
+
+        if (startersCount === 0) {
+          startersSection.innerHTML += "<p><em>Nenhum titular com status relevante.</em></p>";
+        }
+
+        teamDiv.appendChild(startersSection);
+        resultado.appendChild(teamDiv);
+      });
+    } catch (err) {
+      resultado.innerHTML = "<p style='color:red;'>Erro ao buscar dados. Verifique o League ID.</p>";
+      console.error(err);
+    }
+  }
+</script>
 
 </body>
 </html>
