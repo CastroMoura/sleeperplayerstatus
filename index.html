@@ -7,7 +7,7 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
 	
-  <title>Status Jogadores - Sleeper - v.6 - 15/09 </title>
+  <title>Status Jogadores - Sleeper - v.5 - 15/09 </title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -17,8 +17,9 @@
       justify-content: flex-start;
       background: 
         linear-gradient(to right, rgba(244, 244, 244, 0.95) 60%, rgba(244, 244, 244, 0.2) 80%, transparent 100%),
-        url('https://i.ibb.co/9mWwdssF/chatgpt-jogadoresquestionaveis.png') no-repeat right center fixed;
+        url('A_digital_illustration_depicts_a_football_coach_wi.png') no-repeat right center fixed;
       background-size: auto 100%;
+      color: #222;
     }
 
     .content {
@@ -84,6 +85,44 @@
       border: 1px solid #ddd;
     }
 
+    /* Botão Dark Mode */
+    #darkModeBtn {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      background: #333;
+      color: #fff;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 1000;
+    }
+    #darkModeBtn:hover {
+      background: #555;
+    }
+
+    /* DARK MODE */
+    body.dark {
+      background: #121212;
+      color: #f4f4f4;
+    }
+    body.dark .content {
+      background: rgba(34, 34, 34, 0.95);
+      box-shadow: none;
+    }
+    body.dark .team {
+      background: #1e1e1e;
+      color: #f4f4f4;
+    }
+    body.dark .section {
+      background: #2c2c2c;
+    }
+    body.dark .player-card {
+      background: #333;
+      border: 1px solid #555;
+    }
+
     /* RESPONSIVIDADE */
     @media (max-width: 1024px) {
       body {
@@ -100,6 +139,9 @@
         background: #f4f4f4;
         display: block;
       }
+      body.dark {
+        background: #121212;
+      }
       .content {
         max-width: 100%;
         margin: 0;
@@ -107,45 +149,89 @@
         box-shadow: none;
         background: #fff;
       }
+      body.dark .content {
+        background: #1e1e1e;
+      }
+    }
+
+    /* Rodapé contador */
+    footer {
+      margin: 30px;
+      text-align: center;
+      font-size: 14px;
+      color: #555;
+    }
+    body.dark footer {
+      color: #aaa;
     }
   </style>
 </head>
 <body>
+  <button id="darkModeBtn">🌙 Dark Mode</button>
+
   <div class="content">
-    beta.06
-    <h1>Awaken- Uma revisão dos jogadores não saudáveis no Sleeper Fantasy</h1>
+    Aquela ajudinha para conferir os jogadores que tão fora da rodada.
+    <h1>Hora dos Ajustes - Quem tá ok e Quem tá fora? (Sleeper) - v16092501</h1>
     
     <label for="leagueId">Informe o League ID:</label><br>
-    <input type="text" id="leagueId" placeholder="Ex: 1234567890"><br>
-    <button onclick="buscar()">Revisar Times</button>
+    <input type="text" id="leagueId" placeholder="Ex: 1210411931316277248"><br>
+    <button onclick="buscar()">Vamos ver</button>
     
     <div id="resultado"></div>
   </div>
 
+  <footer>
+    <p id="contador"></p>
+  </footer>
+
 <script>
+  // DARK MODE
+  const darkBtn = document.getElementById("darkModeBtn");
+  darkBtn.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
+    darkBtn.textContent = document.body.classList.contains("dark") ? "☀️ Light Mode" : "🌙 Dark Mode";
+  });
+
+  // CONTADOR DE ACESSOS
+  function contadorAcessos() {
+    let acessos = localStorage.getItem("acessosSleeper") || 0;
+    acessos++;
+    localStorage.setItem("acessosSleeper", acessos);
+    document.getElementById("contador").innerText = `Número de acessos a esta página: ${acessos}`;
+  }
+  contadorAcessos();
+
+  // FUNÇÃO DE BUSCA
   async function buscar() {
     const leagueId = document.getElementById("leagueId").value.trim();
     const resultado = document.getElementById("resultado");
     resultado.innerHTML = "<p>Buscando jogadores...</p>";
     
     try {
-      // Busca usuários
+      // Liga
+      const leagueRes = await fetch(`https://api.sleeper.app/v1/league/${leagueId}`);
+      const league = await leagueRes.json();
+
+      // Usuários
       const usersRes = await fetch(`https://api.sleeper.app/v1/league/${leagueId}/users`);
       const users = await usersRes.json();
       const userMap = {};
       users.forEach(u => {
-        userMap[u.user_id] = u.display_name;
+        userMap[u.user_id] = {
+          name: u.display_name,
+          team: u.metadata?.team_name || "Sem nome definido"
+        };
       });
 
-      // Busca rosters
+      // Rosters
       const rostersRes = await fetch(`https://api.sleeper.app/v1/league/${leagueId}/rosters`);
       const rosters = await rostersRes.json();
 
-      // Busca jogadores NFL
+      // Jogadores NFL
       const playersRes = await fetch("https://api.sleeper.app/v1/players/nfl");
       const players = await playersRes.json();
 
-      resultado.innerHTML = ""; // limpa antes de exibir
+      resultado.innerHTML = "";
 
       function getStatusColor(status) {
         switch (status) {
@@ -158,23 +244,25 @@
         }
       }
 
-      // Adiciona nome do time e ordena
+      // Adiciona nome do time
       rosters.forEach(r => {
-        r.ownerName = userMap[r.owner_id] || "Time sem dono";
-        r.teamName = r.metadata?.team_name || "Sem nome definido";
+        const owner = userMap[r.owner_id] || {};
+        r.ownerName = owner.name || "Time sem dono";
+        r.teamName = owner.team || "Sem nome definido";
       });
 
+      // Ordena alfabeticamente
       rosters.sort((a, b) => a.teamName.localeCompare(b.teamName));
 
+      // Monta times
       rosters.forEach(r => {
         const teamDiv = document.createElement("div");
         teamDiv.className = "team";
         teamDiv.innerHTML = `<h2>${r.teamName} — ${r.ownerName}</h2>`;
 
-        // Titulares
         const startersSection = document.createElement("div");
         startersSection.className = "section";
-        startersSection.innerHTML = "<h3>Baleados</h3>";
+        startersSection.innerHTML = "<h3>Titulares</h3>";
 
         let startersCount = 0;
         (r.starters || []).forEach(id => {
@@ -193,7 +281,7 @@
         });
 
         if (startersCount === 0) {
-          startersSection.innerHTML += "<p><em>Todo mundo pronto para a rodada.</em></p>";
+          startersSection.innerHTML += "<p><em>Nenhum titular com status relevante.</em></p>";
         }
 
         teamDiv.appendChild(startersSection);
@@ -205,6 +293,5 @@
     }
   }
 </script>
-	
 </body>
 </html>
