@@ -8,17 +8,19 @@
       font-family: Arial, sans-serif;
       margin: 0;
       min-height: 100vh;
-      background: #f4f4f4;
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      background: linear-gradient(to right, rgba(244,244,244,0.95), rgba(244,244,244,0.85)),
+                  url("https://i.ibb.co/9mWwdssF/chatgpt-jogadoresquestionaveis.png") no-repeat right center;
+      background-size: contain;
+      background-attachment: fixed;
       color: #222;
     }
 
     .content {
-      background: rgba(255, 255, 255, 0.92);
       padding: 30px;
-      border-radius: 10px;
-      max-width: 800px;
-      margin: 100px auto 30px auto;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      max-width: 850px;
     }
 
     h1 { color: #333; }
@@ -160,7 +162,7 @@
           }
         });
         if (startersCount === 0) {
-          startersSection.innerHTML += "<p><em>Titulares todos saudáveis. Bora pra rodada.</em></p>";
+          startersSection.innerHTML += "<p><em>Tudo ok com os titulares. Bora pra rodada.</em></p>";
         }
         teamDiv.appendChild(startersSection);
         resultado.appendChild(teamDiv);
@@ -179,7 +181,7 @@
       const userRes = await fetch(`https://api.sleeper.app/v1/user/${username}`);
       const user = await userRes.json();
       if (!user.user_id) {
-        resultado.innerHTML = "<p style='color:red;'>Ops. Usuário não encontrado.</p>";
+        resultado.innerHTML = "<p style='color:red;'>Usuário não encontrado.</p>";
         return;
       }
       const currentYear = new Date().getFullYear();
@@ -234,20 +236,14 @@
     const resultado = document.getElementById("resultado");
     resultado.innerHTML = "<p>Validando franquias...</p>";
 
-    // Salva input manual no localStorage
-    if (manualTeamName) {
-      localStorage.setItem(`franquia_${leagueId}`, manualTeamName);
-    }
-
     try {
       const usersRes = await fetch(`https://api.sleeper.app/v1/league/${leagueId}/users`);
       const users = await usersRes.json();
       const userMap = {};
       users.forEach(u => {
-        const savedTeam = localStorage.getItem(`franquia_${leagueId}`);
         userMap[u.user_id] = {
           name: u.display_name,
-          team: savedTeam || manualTeamName || u.metadata?.team_name || "Sem nome definido"
+          team: u.metadata?.team_name || manualTeamName || "Sem nome definido"
         };
       });
       const rostersRes = await fetch(`https://api.sleeper.app/v1/league/${leagueId}/rosters`);
