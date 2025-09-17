@@ -2,114 +2,165 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Status Jogadores Sleeper - v.11 - 17/09</title>
+  <title>Status Jogadores - Sleeper - v.12</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #101820, #203040);
+      color: #eee;
       min-height: 100vh;
+    }
+    header {
       display: flex;
-      justify-content: flex-start;
-      background:
-        linear-gradient(to right, rgba(244,244,244,0.95) 60%, rgba(244,244,244,0.2) 80%, transparent 100%),
-        url('https://i.ibb.co/9mWwdssF/chatgpt-jogadoresquestionaveis.png') no-repeat right center fixed;
-      background-size: auto 100%;
-      color: #222;
+      align-items: center;
+      justify-content: space-between;
+      background: #0d1117;
+      padding: 10px 20px;
+      border-bottom: 2px solid #222;
+    }
+    header img {
+      height: 40px;
+    }
+    header button {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background: #4CAF50;
+      color: white;
+    }
+    header button:hover {
+      background: #45a049;
     }
     .content {
-      background: rgba(255,255,255,0.92);
-      padding: 30px;
-      border-radius: 10px;
-      max-width: 55%;
-      margin: 100px 30px 30px 30px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      padding: 20px;
+      max-width: 1200px;
     }
-    h1 { color: #333; }
-    input, button { padding: 8px; font-size: 16px; margin: 5px 0; }
-    button { cursor: pointer; background: #4CAF50; color: white; border: none; border-radius: 5px; }
-    button:hover { background: #45a049; }
-    .team { background: #fff; margin: 20px 0; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    .team h2 { margin-top: 0; color: #222; }
-    .section { margin-top: 10px; padding: 10px; background: #f9f9f9; border-radius: 6px; }
-    .player-card { background: #fafafa; margin: 5px 0; padding: 8px; border-radius: 5px; border: 1px solid #ddd; }
-    #darkModeBtn { position: fixed; top: 15px; right: 15px; background: #333; color: #fff; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; z-index: 1000; }
-    #darkModeBtn:hover { background: #555; }
-    body.dark { background: #121212; color: #f4f4f4; }
-    body.dark .content { background: rgba(34,34,34,0.95); box-shadow: none; }
-    body.dark .team { background: #1e1e1e; color: #f4f4f4; }
-    body.dark .section { background: #2c2c2c; }
-    body.dark .player-card { background: #333; border: 1px solid #555; }
-    @media (max-width:1024px) { body { background-size: cover; } .content { max-width: 70%; } }
-    @media (max-width:768px) {
-      body { background: #f4f4f4; display:block; }
-      body.dark { background:#121212; }
-      .content { max-width:100%; margin:0; border-radius:0; box-shadow:none; background:#fff; }
-      body.dark .content { background:#1e1e1e; }
+    h1 {
+      margin-top: 0;
+      font-size: 22px;
+      color: #fff;
     }
-    footer { margin:30px; text-align:center; font-size:14px; color:#555; }
-    body.dark footer { color:#aaa; }
+    label, input, button {
+      font-size: 14px;
+    }
+    input {
+      padding: 5px;
+      margin: 5px 0;
+      border-radius: 4px;
+      border: 1px solid #555;
+    }
+    button {
+      padding: 6px 12px;
+      margin: 5px 0;
+      border-radius: 5px;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+    .team {
+      background: rgba(255,255,255,0.08);
+      margin: 20px 0;
+      padding: 15px;
+      border-radius: 8px;
+    }
+    .team h2 {
+      margin: 0 0 10px 0;
+      color: #ffcc00;
+    }
+    .team input {
+      margin-left: 10px;
+      background: #222;
+      color: #fff;
+      border: 1px solid #666;
+    }
+    .section {
+      margin-top: 10px;
+      padding: 10px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 6px;
+    }
+    .section h3 {
+      margin: 5px 0;
+      font-size: 16px;
+      color: #ccc;
+    }
+    .player-card {
+      background: rgba(255,255,255,0.05);
+      margin: 5px 0;
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #444;
+    }
+    footer {
+      margin-top: 40px;
+      padding: 15px;
+      text-align: center;
+      font-size: 14px;
+      background: #0d1117;
+      border-top: 2px solid #222;
+      color: #aaa;
+    }
   </style>
 </head>
 <body>
-  <button id="darkModeBtn">🌙 Dark Mode</button>
+  <header>
+    <img src="https://e7.pngegg.com/pngimages/615/707/png-clipart-nfl-logo-nfl-national-football-league-playoffs-united-states-washington-redskins-oakland-raiders-nfl-text-sport.png" alt="NFL Logo">
+    <button onclick="toggleDarkMode()">🌙 Dark Mode</button>
+  </header>
 
   <div class="content">
-    <h1>Hora dos Ajustes - Quem tá ok e Quem tá fora? (Sleeper)</h1>
-    <p>Aquela ajudinha para conferir os jogadores que tão fora da rodada no Sleeper Fantasy da NFL.</p>
+    <h1>Status dos Jogadores (Sleeper)</h1>
 
-    <h3>🔎 Buscar por League ID</h3>
+    <label for="leagueId">Informe o League ID:</label><br>
     <input type="text" id="leagueId" placeholder="Ex: 1234567890"><br>
-    <button onclick="buscarPorLiga()">Verificar Liga</button>
+    <button onclick="buscarPorLiga()">Buscar por Liga</button>
 
-    <h3>🔎 Buscar por Nome de Usuário</h3>
-    <input type="text" id="username" placeholder="Ex: thiagomoura"><br>
-    <button onclick="buscarPorUsuario()">Verificar Usuário</button>
+    <br><br>
 
-    <h3>🔎 Validar Franchise Players (League ID + Número mínimo)</h3>
-    <input type="text" id="leagueFranchiseId" placeholder="League ID"><br>
-    <input type="number" id="minFranchisePlayers" placeholder="Número mínimo de Franchise Players"><br>
-    <button onclick="buscarFranchisePlayers()">Verificar Franquias</button>
+    <label for="username">Informe o nome do usuário (Sleeper):</label><br>
+    <input type="text" id="username" placeholder="Ex: thiago"><br>
+    <button onclick="buscarPorUsuario()">Buscar por Usuário</button>
 
     <div id="resultado"></div>
   </div>
 
-  <footer><p id="contador"></p></footer>
+  <footer>
+    <p id="contador"></p>
+  </footer>
 
 <script>
-  // dark mode
-  const darkBtn = document.getElementById("darkModeBtn");
-  darkBtn.addEventListener("click", () => {
+  // Contador de acessos
+  let acessos = localStorage.getItem("acessos") || 0;
+  acessos++;
+  localStorage.setItem("acessos", acessos);
+  document.getElementById("contador").innerText = "Total de acessos: " + acessos;
+
+  // Dark mode
+  function toggleDarkMode() {
     document.body.classList.toggle("dark");
-    darkBtn.textContent = document.body.classList.contains("dark") ? "☀️ Light Mode" : "🌙 Dark Mode";
-  });
-
-  // contador simples
-  function contadorAcessos() {
-    let acessos = localStorage.getItem("acessosSleeper") || 0;
-    acessos++;
-    localStorage.setItem("acessosSleeper", acessos);
-    document.getElementById("contador").innerText = `GMs em ação: ${acessos}`;
-  }
-  contadorAcessos();
-
-  function getStatusColor(status) {
-    switch (status) {
-      case "Out": return "#e53935";
-      case "Questionable": return "#fb8c00";
-      case "Doubtful": return "#ef6c00";
-      case "IR": return "#8e24aa";
-      case "Suspended": return "#616161";
-      default: return "#1e88e5";
-    }
   }
 
-  // --------------------------
-  // BUSCAR POR LEAGUE ID
-  // --------------------------
+  // Função para salvar nome manual no localStorage
+  function salvarNomeTime(key, value) {
+    let timesSalvos = JSON.parse(localStorage.getItem("timesSalvos") || "{}");
+    timesSalvos[key] = value;
+    localStorage.setItem("timesSalvos", JSON.stringify(timesSalvos));
+  }
+
+  // Função para recuperar nome manual salvo
+  function carregarNomeTime(key) {
+    let timesSalvos = JSON.parse(localStorage.getItem("timesSalvos") || "{}");
+    return timesSalvos[key] || "";
+  }
+
   async function buscarPorLiga() {
     const leagueId = document.getElementById("leagueId").value.trim();
     const resultado = document.getElementById("resultado");
-    if (!leagueId) { resultado.innerHTML = "<p style='color:red;'>Informe um League ID.</p>"; return; }
     resultado.innerHTML = "<p>Buscando jogadores...</p>";
 
     try {
@@ -117,11 +168,7 @@
       const users = await usersRes.json();
       const userMap = {};
       users.forEach(u => {
-        userMap[u.user_id] = {
-          name: u.display_name,
-          teamFromUserMeta: u.metadata?.team_name || null,
-          franchiseFromUserMeta: u.metadata?.team_abbreviation || null
-        };
+        userMap[u.user_id] = u.display_name;
       });
 
       const rostersRes = await fetch(`https://api.sleeper.app/v1/league/${leagueId}/rosters`);
@@ -132,268 +179,120 @@
 
       resultado.innerHTML = "";
 
-      // ordenar por nome do time (tenta metadata do roster primeiro)
       rosters.forEach(r => {
-        r.displayTeamName = r.metadata?.team_name || userMap[r.owner_id]?.teamFromUserMeta || "Sem nome definido";
-      });
-      rosters.sort((a,b) => (a.displayTeamName || "").localeCompare((b.displayTeamName || "")));
+        const ownerName = userMap[r.owner_id] || "Time sem dono";
+        const teamKey = `${leagueId}_${r.roster_id}`;
+        const teamNameSalvo = carregarNomeTime(teamKey);
+        const teamName = teamNameSalvo || r.metadata?.team_name || "";
 
-      rosters.forEach(r => {
-        const owner = userMap[r.owner_id] || {};
-        const teamName = r.displayTeamName;
         const teamDiv = document.createElement("div");
         teamDiv.className = "team";
-        teamDiv.innerHTML = `<h2>${teamName} — ${owner.name || "Time sem dono"}</h2>`;
+
+        teamDiv.innerHTML = `
+          <h2>${ownerName} <small>(${teamName || "Digite o nome do time"})</small>
+            <input type="text" value="${teamName}" placeholder="Nome do time"
+              oninput="this.previousElementSibling.innerText='('+this.value+')'; salvarNomeTime('${teamKey}', this.value)">
+          </h2>
+        `;
 
         const startersSection = document.createElement("div");
         startersSection.className = "section";
         startersSection.innerHTML = "<h3>Titulares</h3>";
 
-        let startersCount = 0;
+        let count = 0;
         (r.starters || []).forEach(id => {
           const p = players[id];
           if (p?.injury_status && p.injury_status !== "Healthy") {
-            startersCount++;
-            const color = getStatusColor(p.injury_status);
-            const card = document.createElement("div");
-            card.className = "player-card";
-            card.innerHTML = `
-              <strong>${p.full_name}</strong> (${p.position || "?"}, ${p.team || "FA"})<br>
-              Status: <span style="color:${color}; font-weight:bold;">${p.injury_status}</span>
-            `;
-            startersSection.appendChild(card);
+            count++;
+            const playerDiv = document.createElement("div");
+            playerDiv.className = "player-card";
+            playerDiv.innerText = `${p.full_name} — ${p.injury_status}`;
+            startersSection.appendChild(playerDiv);
           }
         });
 
-        if (startersCount === 0) {
-          startersSection.innerHTML += "<p><em>Nenhum titular com status relevante.</em></p>";
+        if (count > 0) {
+          teamDiv.querySelector("h2").innerHTML += ` [${count}]`;
+          teamDiv.appendChild(startersSection);
         }
 
-        teamDiv.appendChild(startersSection);
         resultado.appendChild(teamDiv);
       });
-    } catch (err) {
-      console.error(err);
-      resultado.innerHTML = "<p style='color:red;'>Erro ao buscar dados. Verifique o League ID.</p>";
+    } catch (e) {
+      resultado.innerHTML = "<p>Erro ao buscar dados.</p>";
+      console.error(e);
     }
   }
 
-  // --------------------------
-  // BUSCAR POR USUÁRIO
-  // --------------------------
   async function buscarPorUsuario() {
     const username = document.getElementById("username").value.trim();
     const resultado = document.getElementById("resultado");
-    if (!username) { resultado.innerHTML = "<p style='color:red;'>Informe um nome de usuário.</p>"; return; }
     resultado.innerHTML = "<p>Buscando ligas do usuário...</p>";
 
     try {
       const userRes = await fetch(`https://api.sleeper.app/v1/user/${username}`);
       const user = await userRes.json();
-      if (!user || !user.user_id) {
-        resultado.innerHTML = "<p style='color:red;'>Usuário não encontrado.</p>";
+      if (!user?.user_id) {
+        resultado.innerHTML = "<p>Usuário não encontrado.</p>";
         return;
       }
 
-      const currentYear = new Date().getFullYear();
-      const leaguesRes = await fetch(`https://api.sleeper.app/v1/user/${user.user_id}/leagues/nfl/${currentYear}`);
+      const leaguesRes = await fetch(`https://api.sleeper.app/v1/user/${user.user_id}/leagues/nfl/2024`);
       const leagues = await leaguesRes.json();
 
-      const fantasyLeagues = Array.isArray(leagues) ? leagues.filter(l => l.settings && l.settings.type === 2) : [];
-
-      if (fantasyLeagues.length === 0) {
-        resultado.innerHTML = "<p style='color:orange;'>Usuário não participa de ligas de Fantasy NFL Football.</p>";
-        return;
-      }
-
-      const playersRes = await fetch("https://api.sleeper.app/v1/players/nfl");
-      const players = await playersRes.json();
-
       resultado.innerHTML = "";
+      for (const league of leagues) {
+        if (league.sport !== "nfl" || league.league_type !== "fantasy") continue;
 
-      for (const league of fantasyLeagues) {
-        try {
-          const rostersRes = await fetch(`https://api.sleeper.app/v1/league/${league.league_id}/rosters`);
-          const rosters = await rostersRes.json();
-          const userRoster = (rosters || []).find(r => r.owner_id === user.user_id);
-          if (!userRoster) continue;
+        const rostersRes = await fetch(`https://api.sleeper.app/v1/league/${league.league_id}/rosters`);
+        const rosters = await rostersRes.json();
+
+        const playersRes = await fetch("https://api.sleeper.app/v1/players/nfl");
+        const players = await playersRes.json();
+
+        rosters.forEach(r => {
+          if (r.owner_id !== user.user_id) return;
+
+          const teamKey = `${league.league_id}_${r.roster_id}`;
+          const teamNameSalvo = carregarNomeTime(teamKey);
 
           const teamDiv = document.createElement("div");
           teamDiv.className = "team";
-          teamDiv.innerHTML = `<h2>${league.name} — ${user.display_name}</h2>`;
+          teamDiv.innerHTML = `
+            <h2>${league.name} — ${user.display_name} 
+              <small>(${teamNameSalvo || "Digite o nome do time"})</small>
+              <input type="text" value="${teamNameSalvo}" placeholder="Nome do time"
+                oninput="this.previousElementSibling.innerText='('+this.value+')'; salvarNomeTime('${teamKey}', this.value)">
+            </h2>
+          `;
 
           const startersSection = document.createElement("div");
           startersSection.className = "section";
           startersSection.innerHTML = "<h3>Titulares</h3>";
 
-          let startersCount = 0;
-          (userRoster.starters || []).forEach(id => {
+          let count = 0;
+          (r.starters || []).forEach(id => {
             const p = players[id];
             if (p?.injury_status && p.injury_status !== "Healthy") {
-              startersCount++;
-              const color = getStatusColor(p.injury_status);
-              const card = document.createElement("div");
-              card.className = "player-card";
-              card.innerHTML = `
-                <strong>${p.full_name}</strong> (${p.position || "?"}, ${p.team || "FA"})<br>
-                Status: <span style="color:${color}; font-weight:bold;">${p.injury_status}</span>
-              `;
-              startersSection.appendChild(card);
+              count++;
+              const playerDiv = document.createElement("div");
+              playerDiv.className = "player-card";
+              playerDiv.innerText = `${p.full_name} — ${p.injury_status}`;
+              startersSection.appendChild(playerDiv);
             }
           });
 
-          if (startersCount === 0) {
-            startersSection.innerHTML += "<p><em>Tudo pronto, GM. Agora é orar, irmão.</em></p>";
+          if (count > 0) {
+            teamDiv.querySelector("h2").innerHTML += ` [${count}]`;
+            teamDiv.appendChild(startersSection);
           }
 
-          teamDiv.appendChild(startersSection);
           resultado.appendChild(teamDiv);
-        } catch (errInner) {
-          console.warn("Erro ao processar liga:", league.league_id, errInner);
-        }
-      }
-    } catch (err) {
-      console.error(err);
-      resultado.innerHTML = "<p style='color:red;'>Erro ao buscar dados. Verifique o nome do usuário.</p>";
-    }
-  }
-
-  // --------------------------
-  // BUSCAR FRANCHISE PLAYERS (nova)
-  // --------------------------
-  async function buscarFranchisePlayers() {
-    const leagueId = document.getElementById("leagueFranchiseId").value.trim();
-    const minRaw = document.getElementById("minFranchisePlayers").value.trim();
-    const resultado = document.getElementById("resultado");
-
-    if (!leagueId) { resultado.innerHTML = "<p style='color:red;'>Informe um League ID.</p>"; return; }
-    if (!minRaw || isNaN(Number(minRaw))) {
-      resultado.innerHTML = "<p style='color:red;'>Informe um número válido para 'Número mínimo de Franchise Players'.</p>";
-      return;
-    }
-    const minFranchise = parseInt(minRaw, 10);
-
-    resultado.innerHTML = "<p>Verificando franquias...</p>";
-
-    try {
-      // usuários e mapeamentos
-      const usersRes = await fetch(`https://api.sleeper.app/v1/league/${leagueId}/users`);
-      const users = await usersRes.json();
-      const userMap = {};
-      users.forEach(u => {
-        userMap[u.user_id] = {
-          name: u.display_name,
-          teamFromUserMeta: u.metadata?.team_name || null,
-          franchiseFromUserMeta: (u.metadata?.team_abbreviation || u.metadata?.team_name || null)
-        };
-      });
-
-      // rosters
-      const rostersRes = await fetch(`https://api.sleeper.app/v1/league/${leagueId}/rosters`);
-      const rosters = await rostersRes.json();
-
-      // jogadores
-      const playersRes = await fetch("https://api.sleeper.app/v1/players/nfl");
-      const players = await playersRes.json();
-
-      resultado.innerHTML = "";
-
-      // função utilitária para checar se jogador pertence à franquia (heurística)
-      function playerBelongsToFranchise(p, franchiseNormalized) {
-        if (!p || !p.team || !franchiseNormalized) return false;
-        const pTeam = (p.team || "").toUpperCase();
-        const f = franchiseNormalized.toUpperCase();
-        if (pTeam === f) return true;
-        // checar se abreviação está contida ou vice-versa
-        if (pTeam.includes(f) || f.includes(pTeam)) return true;
-        return false;
-      }
-
-      // processa cada roster
-      // ordenar rosters por nome do time (metadata ou user meta)
-      (rosters || []).forEach(r => {
-        r.displayTeamName = r.metadata?.team_name || userMap[r.owner_id]?.teamFromUserMeta || "Sem nome definido";
-      });
-      rosters.sort((a,b) => (a.displayTeamName || "").localeCompare((b.displayTeamName || "")));
-
-      rosters.forEach(r => {
-        const owner = userMap[r.owner_id] || {};
-        // tenta obter franquia em diferentes fontes:
-        const rawFranchise = (r.metadata?.team_abbreviation) || (r.metadata?.team_name) || owner.franchiseFromUserMeta || owner.teamFromUserMeta || "";
-        const franchiseNormalized = rawFranchise ? String(rawFranchise).toUpperCase().trim() : "";
-
-        // não abortar se franquia ausente; apenas mostrar aviso
-        let totalFranchiseStarters = 0;
-        let healthyFranchiseStarters = 0;
-        const franchisePlayersList = [];
-
-        (r.starters || []).forEach(id => {
-          const p = players[id];
-          if (!p) return; // pula se dados do jogador não existirem
-          if (franchiseNormalized && playerBelongsToFranchise(p, franchiseNormalized)) {
-            totalFranchiseStarters++;
-            const isHealthy = !p.injury_status || p.injury_status === "Healthy";
-            if (isHealthy) healthyFranchiseStarters++;
-            franchisePlayersList.push({
-              name: p.full_name,
-              position: p.position || "",
-              team: p.team || "",
-              status: p.injury_status || "Healthy",
-              healthy: isHealthy
-            });
-          }
         });
-
-        // monta bloco do time
-        const teamDiv = document.createElement("div");
-        teamDiv.className = "team";
-        const teamLabel = r.displayTeamName;
-        const ownerLabel = owner.name || "Time sem dono";
-        teamDiv.innerHTML = `<h2>${teamLabel} — ${ownerLabel}</h2>`;
-
-        const section = document.createElement("div");
-        section.className = "section";
-
-        // mostra franquia identificada (ou alerta se não identificada)
-        if (franchiseNormalized) {
-          section.innerHTML = `
-            <p>Franquia identificada: <strong>${franchiseNormalized}</strong></p>
-            <p>Jogadores titulares da franquia escalados: <strong>${totalFranchiseStarters}</strong></p>
-            <p>Dos quais saudáveis: <strong>${healthyFranchiseStarters}</strong></p>
-          `;
-        } else {
-          section.innerHTML = `
-            <p style="color:orange;"><strong>Franquia não identificada automaticamente.</strong></p>
-            <p>Jogadores titulares da franquia escalados (não identificados): <strong>${totalFranchiseStarters}</strong></p>
-            <p>Dos quais saudáveis: <strong>${healthyFranchiseStarters}</strong></p>
-            <p>Observação: verifique se o campo "team_abbreviation" ou "team_name" está preenchido em roster.metadata ou no perfil do usuário.</p>
-          `;
-        }
-
-        // valida mínimo
-        if (healthyFranchiseStarters >= minFranchise) {
-          section.innerHTML += `<p style="color:green; font-weight:bold;">✅ Bom trabalho, tudo ok com a Franquia.</p>`;
-        } else {
-          const faltam = minFranchise - healthyFranchiseStarters;
-          section.innerHTML += `<p style="color:red; font-weight:bold;">⚠️ Franquia em Risco — Faltam <strong style="color:red;">${faltam}</strong></p>`;
-
-          if (franchisePlayersList.length > 0) {
-            section.innerHTML += "<h4>Jogadores titulares da franquia (lista):</h4>";
-            franchisePlayersList.forEach(p => {
-              section.innerHTML += `<div class="player-card">${p.name} (${p.position}, ${p.team}) — ${p.status}</div>`;
-            });
-          } else {
-            section.innerHTML += "<p><em>Nenhum jogador da franquia foi identificado entre os titulares.</em></p>";
-          }
-        }
-
-        teamDiv.appendChild(section);
-        resultado.appendChild(teamDiv);
-      });
-
-    } catch (err) {
-      console.error(err);
-      resultado.innerHTML = "<p style='color:red;'>Erro ao buscar dados. Verifique os parâmetros e o League ID.</p>";
+      }
+    } catch (e) {
+      resultado.innerHTML = "<p>Erro ao buscar dados.</p>";
+      console.error(e);
     }
   }
 </script>
