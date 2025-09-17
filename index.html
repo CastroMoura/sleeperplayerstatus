@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Awaken - 170925 v19</title>
+  <title>Awaken - 170925 v20</title>
   <style>
     :root{
       --bg-left-dark: linear-gradient(90deg, rgba(10,10,10,1) 0%, rgba(40,40,40,0.9) 60%);
@@ -520,14 +520,14 @@ async function buscarPorUsuario(){
         header.className = "team-header";
         header.innerHTML = `
           <div class="left">
-            <div>
-              <div class="team-title">${detected} — ${userData.display_name}</div>
-              <div class="team-meta">Liga: ${league.name}</div>
-            </div>
-          </div>
-          <div class="right">
-            <div class="team-badge">${injured.length} lesionados</div>
-          </div>
+    <div>
+      <div class="team-title">${detected} — Liga ID: ${league.league_id}</div>
+      <div class="team-meta">Liga: ${league.name}</div>
+    </div>
+  </div>
+  <div class="right">
+    <div class="team-badge">${injured.length} lesionados</div>
+  </div>
         `;
         header.addEventListener("click", ()=>toggleTeamBody(card));
 
