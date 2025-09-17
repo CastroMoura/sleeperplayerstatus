@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Awaken - v22 - 17SET25</title>
+  <title>Awaken - v23 - 17SET25</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -92,13 +92,30 @@
     body.dark .team { background: #1e1e1e; }
     body.dark .section { background: #2c2c2c; }
     body.dark .player-card { background: #333; border: 1px solid #555; }
+      /* footer fixed-ish at page bottom area */
     footer {
-      margin: 30px;
-      text-align: center;
-      font-size: 14px;
-      color: #555;
+      position:fixed;
+      left:0;right:0;bottom:0;
+      background:rgba(255,255,255,0.98);
+      color:#333;
+      padding:10px 18px;
+      box-shadow:0 -6px 30px rgba(0,0,0,0.08);
+      display:flex;
+      justify-content:center;
+      gap:18px;
+      align-items:center;
+      font-size:14px;
     }
-    body.dark footer { color: #aaa; }
+    body.dark footer {
+      background:rgba(10,10,10,0.98);
+      color:#ddd;
+    }
+    footer a { color:var(--accent); text-decoration:none; font-weight:700; }
+    footer a:hover { text-decoration:underline; }
+    @media (max-width:900px){
+      .page{margin:20px;}
+      footer{font-size:13px;padding:10px;}
+    }
   </style>
 </head>
 <body>
@@ -126,8 +143,8 @@
     <div id="resultado"></div>
   </div>
   <footer>
-    <p id="contador"></p>
-    <p><a href="mailto:scrum.moura@gmail.com">Algo errado? Novas Ideias? Fale conosco.</a></p>
+ <div id="accessCount">GMs em ação: 0</div>
+    <div><a href="mailto:scrum.moura@gmail.com">Algo de errado? Novas ideias? Fale conosco.</a></div>
   </footer>
 
 <script>
