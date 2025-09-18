@@ -799,7 +799,7 @@ async function buscarFranchisePlayers(){
 
         // list non-franchise injured starters (all non-healthy starters)
         if(nonHealthyStarters.length > 0){
-          const title = document.createElement("div"); title.className = "group-title"; title.textContent = "Titulares com status diferente de Healthy (todos):";
+          const title = document.createElement("div"); title.className = "group-title"; title.textContent = "Titulares não saudáveis:";
           containerPlayers.appendChild(title);
           const nonList = document.createElement("div"); nonList.className = "nonhealthy-list";
           for(const p of nonHealthyStarters){
