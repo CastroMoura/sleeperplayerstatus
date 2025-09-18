@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Awaken - v25 - 17SET25</title>
+  <title>Awaken - v26 - 18SET25</title>
   <style>
     :root{
       --bg-left-dark: linear-gradient(90deg, rgba(10,10,10,1) 0%, rgba(40,40,40,0.9) 60%);
@@ -174,6 +174,13 @@
     .status-Healthy { background:#2e7d32; color:#fff; }
 
     .players-list .group-title { margin-top:10px; font-weight:700; }
+
+    /* empty slot alert (novo) */
+    .empty-alert {
+      color: var(--bad);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
 
     /* summary */
     .summary { margin-top:8px;font-weight:700; }
@@ -404,7 +411,15 @@ async function buscarPorLiga(){
       const teamNameRaw = r.metadata?.team_name || owner.teamMeta || owner.name || "Sem nome definido";
       const detected = matchTeamByName(teamNameRaw) || teamNameRaw;
 
-      const starters = (r.starters || []);
+      const rawStarters = r.starters || [];
+      // count empty starter positions (null/undefined or player missing)
+      let emptyCount = 0;
+      for(let i=0;i<rawStarters.length;i++){
+        const id = rawStarters[i];
+        if(!id || !players[id]) emptyCount++;
+      }
+
+      const starters = rawStarters; // use raw array for iteration
       const injuredPlayers = [];
       for(const pid of starters){
         const p = players[pid];
@@ -430,8 +445,19 @@ async function buscarPorLiga(){
       header.addEventListener("click", ()=>toggleTeamBody(card));
 
       const body = document.createElement("div"); body.className = "team-body";
+
+      // empty positions alert (aparece antes da lista de jogadores)
+      if(emptyCount > 0){
+        const posText = emptyCount === 1 ? 'Posição' : 'Posições';
+        const alertDiv = document.createElement("div");
+        alertDiv.className = "empty-alert";
+        alertDiv.textContent = `Alerta de ${emptyCount} ${posText} sem Jogador escalado.`;
+        body.appendChild(alertDiv);
+      }
+
       if(injuredPlayers.length === 0){
-        body.innerHTML = `<div class="summary">Nenhum titular lesionado.</div>`;
+        const s = document.createElement("div"); s.className = "summary"; s.textContent = "Nenhum titular lesionado.";
+        body.appendChild(s);
       } else {
         // auto open
         body.style.display = "block";
@@ -494,6 +520,13 @@ async function buscarPorUsuario(){
         const teamNameRaw = roster.metadata?.team_name || league.name || "";
         const detected = matchTeamByName(teamNameRaw) || teamNameRaw || league.name;
 
+        const rawStarters = roster.starters || [];
+        let emptyCount = 0;
+        for(let i=0;i<rawStarters.length;i++){
+          const id = rawStarters[i];
+          if(!id || !players[id]) emptyCount++;
+        }
+
         const starters = roster.starters || [];
         const injured = [];
         for(const pid of starters){
@@ -518,8 +551,19 @@ async function buscarPorUsuario(){
         header.addEventListener("click", ()=>toggleTeamBody(card));
 
         const body = document.createElement("div"); body.className = "team-body";
+
+        // empty positions alert
+        if(emptyCount > 0){
+          const posText = emptyCount === 1 ? 'Posição' : 'Posições';
+          const alertDiv = document.createElement("div");
+          alertDiv.className = "empty-alert";
+          alertDiv.textContent = `Alerta de ${emptyCount} ${posText} sem Jogador escalado.`;
+          body.appendChild(alertDiv);
+        }
+
         if(injured.length === 0){
-          body.innerHTML = `<div class="summary">Nenhum titular lesionado encontrado nesta liga.</div>`;
+          const s = document.createElement("div"); s.className = "summary"; s.textContent = "Nenhum titular lesionado encontrado nesta liga.";
+          body.appendChild(s);
         } else {
           body.style.display = "block";
           for(const p of injured){
@@ -577,18 +621,20 @@ async function buscarFranchisePlayers(){
       };
     });
 
-    // Build enriched list with precomputed franchise detection & counts
+    // Build enriched list with precomputed franchise detection & counts (and empty starter count)
     const enriched = (rosters || []).map(r => {
       const owner = userMap[r.owner_id] || {name:"Time sem dono", userTeamMeta:""};
       const rawMeta = r.metadata?.team_name || owner.userTeamMeta || owner.name || "";
       // try to detect canonical name
       let detected = matchTeamByName(rawMeta);
-      // starters as player objects
-      const starters = (r.starters || []).map(id => players[id]).filter(Boolean);
+      // raw starters array (may contain nulls)
+      const rawStarters = r.starters || [];
+      // starters as player objects (present only)
+      const startersObjs = rawStarters.map(id => players[id]).filter(Boolean);
       // attempt inference by majority team abbr if no detected
       if(!detected){
         const counts = {};
-        for(const p of starters){
+        for(const p of startersObjs){
           if(!p || !p.team) continue;
           counts[p.team] = (counts[p.team] || 0) + 1;
         }
@@ -603,7 +649,7 @@ async function buscarFranchisePlayers(){
 
       // compute franchiseStarters (matching p.team -> full name matching detected)
       const franchiseStarters = [];
-      for(const p of starters){
+      for(const p of startersObjs){
         const pFull = abbrToFullName(p.team) || p.team || "";
         if(normalizeName(pFull) === normalizeName(detected) || normalizeName(pFull).includes(normalizeName(detected)) || normalizeName(detected).includes(normalizeName(pFull))){
           franchiseStarters.push(p);
@@ -611,18 +657,27 @@ async function buscarFranchisePlayers(){
       }
       const healthyFranchise = franchiseStarters.filter(p=>!p.injury_status || p.injury_status === "Healthy").length;
       const franchiseCount = franchiseStarters.length;
-      const injuredOverall = starters.filter(p => p.injury_status && p.injury_status !== "Healthy").length;
+      const injuredOverall = startersObjs.filter(p => p.injury_status && p.injury_status !== "Healthy").length;
+
+      // empty starters count (rawStarters that are null/undefined OR id not found in players)
+      let emptyStartersCount = 0;
+      for(let i=0;i<rawStarters.length;i++){
+        const id = rawStarters[i];
+        if(!id || !players[id]) emptyStartersCount++;
+      }
 
       return {
         roster: r,
         owner,
         rawMeta,
         detected,
-        starters,
+        rawStarters,
+        starters: startersObjs,
         franchiseStarters,
         franchiseCount,
         healthyFranchise,
-        injuredOverall
+        injuredOverall,
+        emptyStartersCount
       };
     });
 
@@ -644,6 +699,7 @@ async function buscarFranchisePlayers(){
       const franchiseCount = en.franchiseCount;
       const injuredOverall = en.injuredOverall;
       const healthyFranchise = en.healthyFranchise;
+      const emptyCount = en.emptyStartersCount;
 
       // create card
       const card = document.createElement("div"); card.className = "team-card";
@@ -731,6 +787,15 @@ async function buscarFranchisePlayers(){
           statusLine.innerHTML = `<div style="color:var(--bad);font-weight:800;margin-top:6px;">⚠️ Franquia em Risco — faltam <strong>${falta}</strong> titulares saudáveis.</div>`;
         }
         containerPlayers.appendChild(statusLine);
+
+        // ** ALERTA DE POSIÇÕES VAZIAS (aparece antes da listagem) **
+        if(en.emptyStartersCount && en.emptyStartersCount > 0){
+          const posText = en.emptyStartersCount === 1 ? 'Posição' : 'Posições';
+          const alertDiv = document.createElement("div");
+          alertDiv.className = "empty-alert";
+          alertDiv.textContent = `Alerta de ${en.emptyStartersCount} ${posText} sem Jogador escalado.`;
+          containerPlayers.appendChild(alertDiv);
+        }
 
         // list non-franchise injured starters (all non-healthy starters)
         if(nonHealthyStarters.length > 0){
@@ -831,17 +896,14 @@ function exportFranchiseWhatsApp(minFranchise){
   const cards = Array.from(document.querySelectorAll(".team-card"));
   const lines = [];
   for(const card of cards){
-    // a franchise card contains input.team-input; skip others
     const input = card.querySelector(".team-input");
     if(!input) continue;
     const title = card.querySelector(".team-title")?.textContent?.trim() || "Time";
     const injured = parseInt(card.dataset.injuredOverall || "0", 10);
     const healthyFr = parseInt(card.dataset.healthyFranchise || "0", 10);
     const franchiseCount = parseInt(card.dataset.franchiseCount || "0", 10);
-    // include only if there is an issue
     if(injured > 0 || healthyFr < minFranchise){
       lines.push(`${title} — Lesionados: ${injured} | Franchise: ${franchiseCount} | Saudáveis da franchise: ${healthyFr}/${minFranchise}`);
-      // list injured players (from nonhealthy-list)
       const nonHealthyEls = card.querySelectorAll(".nonhealthy-list .player-card");
       if(nonHealthyEls.length){
         nonHealthyEls.forEach(el=>{
@@ -853,7 +915,7 @@ function exportFranchiseWhatsApp(minFranchise){
       } else {
         lines.push("  - Nenhum titular lesionado listado.");
       }
-      lines.push(""); // blank line
+      lines.push("");
     }
   }
 
@@ -863,7 +925,6 @@ function exportFranchiseWhatsApp(minFranchise){
   }
 
   const message = "Resumo - Times com problemas (Sleeper):\n\n" + lines.join("\n");
-  // copy to clipboard and offer to open WhatsApp Web
   navigator.clipboard.writeText(message).then(()=>{
     const open = confirm("Resumo copiado para área de transferência. Deseja abrir o WhatsApp Web com a mensagem preenchida?");
     if(open){
