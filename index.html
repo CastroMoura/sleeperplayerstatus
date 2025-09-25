@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Awaken - v30 - 24SET25</title>
+  <title>Awaken - v31 - 24SET25</title>
   <style>
     :root{
       --bg-left-dark: linear-gradient(90deg, rgba(10,10,10,1) 0%, rgba(40,40,40,0.9) 60%);
@@ -29,6 +29,67 @@
         url('https://i.ibb.co/9mWwdssF/chatgpt-jogadoresquestionaveis.png') no-repeat right center fixed;
       background-size:auto 100%;
       color:#eaeaea;
+    }
+   /* Tornar o elemento inline-block facilita o scale visual em alguns navegadores */
+    #zoomable{
+      display:inline-block;
+      width:min(1100px,95%);
+      background:linear-gradient(180deg, #fff 0%, #fbfdff 100%);
+      border-radius:14px;
+      box-shadow:0 6px 24px rgba(20,30,60,0.08);
+      padding:28px;
+      transform-origin: center center;
+      transition: transform var(--transition-time) ease;
+      will-change: transform;
+    }
+
+
+  .zoom-controls{
+      position:fixed;
+      right:18px;
+      bottom:18px;
+      display:flex;
+      flex-direction:column;
+      gap:var(--btn-gap);
+      align-items:center;
+      z-index:9999;
+    }
+
+
+
+    .zoom-btn{
+      width:var(--btn-size);
+      height:var(--btn-size);
+      border-radius:10px;
+      border:0;
+      background:#0b67ff;
+      color:white;
+      font-weight:600;
+      font-size:20px;
+      display:inline-grid;
+      place-items:center;
+      box-shadow:0 6px 18px rgba(11,103,255,0.18);
+      cursor:pointer;
+      transition:transform .08s ease, box-shadow .12s ease;
+    }
+    .zoom-btn:active{ transform: translateY(1px) scale(.98); }
+    .zoom-btn[aria-disabled="true"], .zoom-btn:disabled{ opacity:.45; cursor:not-allowed; pointer-events:none; }
+
+    .zoom-label{
+      background:rgba(0,0,0,0.6);
+      color:#fff;
+      font-size:13px;
+      padding:6px 8px;
+      border-radius:8px;
+      margin-top:6px;
+      min-width:14px;
+      text-align:center;
+    }
+
+    .reset-btn{
+      width:36px;height:36px;font-size:14px;border-radius:8px;
+      background:#f2f4f8;color:#0b67ff;box-shadow:none;
+      border:1px solid rgba(11,103,255,0.06);
     }
 
     /* layout 3 colunas */
