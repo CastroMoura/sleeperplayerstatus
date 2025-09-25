@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Awaken - v31 - 24SET25</title>
+  <title>Awaken - v32 - 25SET25</title>
   <style>
     :root{
       --bg-left-dark: linear-gradient(90deg, rgba(10,10,10,1) 0%, rgba(40,40,40,0.9) 60%);
@@ -100,9 +100,9 @@
       height: calc(100vh - 80px);
       box-sizing: border-box;
     }
-    .col-left { width:35%; min-width:200px; overflow:auto; }
-    .col-center { width:55%; overflow:auto; }
-    .col-right { width:15%; min-width:180px; position:relative; overflow:auto; }
+    .col-left { width:25%; min-width:200px; overflow:auto; }
+    .col-center { width:45%; overflow:auto; }
+    .col-right { width:30%; min-width:180px; position:relative; overflow:auto; }
 
     header { margin-bottom:12px; }
     header h1 { font-size:18px; margin:0; }
@@ -198,7 +198,110 @@
       .col-left, .col-right { display:none; }
       .col-center { width:100%; }
       .page { padding:12px; }
+      .carousel { height: 280px; }
+      .carousel-content { font-size: 1rem; padding: 16px; }
+      .carousel button { width: 40px; height: 40px; }
     }
+
+  .carousel {
+	align-itens:center;
+      position: relative;
+      width: 330px;
+      max-width: 98%;
+      height: 420px;
+      overflow: hidden;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+      background: linear-gradient(180deg,#0f1724,#071226);
+      color: #fff;
+    }
+
+    .carousel-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .carousel-content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      box-sizing: border-box;
+      text-align: center;
+      font-size: 1.15rem;
+      line-height: 1.3;
+      opacity: 0;
+      transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
+      transform: translateY(8px);
+      z-index: 1;
+    }
+
+    .carousel-content.active {
+      opacity: 1;
+      transform: translateY(0);
+      z-index: 2;
+    }
+
+    .carousel-content img {
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    /* Botões */
+    .carousel button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #fff;
+      width: 46px;
+      height: 46px;
+      font-size: 1.4rem;
+      cursor: pointer;
+      border-radius: 50%;
+      outline: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      user-select: none;
+    }
+
+    .carousel button:hover { background: rgba(255,255,255,0.18); }
+
+    .prev { left: 12px; }
+    .next { right: 12px; }
+
+    /* Indicadores */
+    .indicators {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 10;
+    }
+
+    .indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.5);
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .indicator.active {
+      background: #fff;
+    }
+    
   </style>
 </head>
 <body>
@@ -291,75 +394,23 @@
     </div>
 
     <!-- COLUNA DIREITA: reservado + dark mode top -->
-        <div class="col-right">
-      <div style="position:sticky; top:10px; display:flex; justify-content:flex-end;">
-        <button class="dark-toggle" id="darkToggle">🌙 Dark Mode</button>
-</div>
-    <div style="margin-top:18px;" class="panel">
-    <button id="zoomIn" class="zoom-btn" title="Aumentar ( + )" aria-label="Aumentar zoom">+</button>
-    <button id="zoomOut" class="zoom-btn" title="Diminuir ( - )" aria-label="Diminuir zoom">-</button>
-    <button id="reset" class="reset-btn" title="Resetar zoom (0)" aria-label="Resetar zoom">⟳</button>
-    <div id="zoomLabel" class="zoom-label" aria-live="polite">100%</div>
-        <h4>Bye Weeks</h4>
-        <div style="color:var(--muted);font-size:13px;margin-top:6px;">
- 
-<b>Week 5</b>
-<br>Atlanta Falcons
-<br>Chicago Bears
-<br>Green Bay Packers
-<br>Pittsburgh Steelers
-<br><br>
+       <div class="col-right">
+      <div align=center>
+    <button id="darkToggle" class="zoom-btn"title="DarkMode" >🌙 Dark Mode</button> &nbsp;
+    <button id="zoomIn" class="zoom-btn" title="Aumentar ( + )" aria-label="Aumentar zoom">+</button>&nbsp;
+    <button id="zoomOut" class="zoom-btn" title="Diminuir ( - )" aria-label="Diminuir zoom">-</button>&nbsp;
+    <button id="reset" class="zoom-btn" title="Resetar zoom (0)" aria-label="Resetar zoom">⟳</button>&nbsp;
+    <div>&nbsp;</div>
+    </div>
+    <div align=center>
+  <div class="carousel" id="carousel" aria-roledescription="carousel">
+    <div class="carousel-inner" id="carouselInner"></div>
 
-<b>Week 6</b>
-<br>Houston Texans
-<br>Minnesota Vikings
-<br><br>
+    <button class="prev" aria-label="Anterior" id="prevBtn">‹</button>
+    <button class="next" aria-label="Próximo" id="nextBtn">›</button>
 
-<b>Week 7</b>
-<br>Baltimore Ravens
-<br>Buffalo Bills
-<br><br>
-
-<b>Week 8</b>
-<br>Arizona Cardinals
-<br>Detroit Lions
-<br>Jacksonville Jaguars
-<br>Las Vegas Raiders
-<br>Los Angeles Rams
-<br>Seattle Seahawks
-<br><br>
-
-<b>Week 9</b>
-<br>Cleveland Browns
-<br>New York Jets
-<br>Philadelphia Eagles
-<br>Tampa Bay Buccaneers
-<br><br>
-
-<b>Week 10</b>
-<br>Cincinnati Bengals
-<br>Dallas Cowboys
-<br>Kansas City Chiefs
-<br>Tennessee Titans
-<br><br>
-
-<b>Week 11</b>
-<br>Indianapolis Colts
-<br>New Orleans Saints
-<br><br>
-
-<b>Week 12</b>
-<br>Denver Broncos
-<br>Los Angeles Chargers
-<br>Miami Dolphins
-<br>Washington Commanders
-<br><br>
-
-<b>Week 14</b>
-<br>Carolina Panthers
-<br>New England Patriots
-<br>New York Giants
-<br>San Francisco 49ers       
+    <div class="indicators" id="indicators"></div>
+  </div>
 
         </div>
 
@@ -1225,6 +1276,103 @@ function toggleTeamBody(el){
   const isOpen = body.style.display === "block";
   body.style.display = isOpen ? "none" : "block";
 }
+const noticias = [
+      {
+        imagem: "https://pbs.twimg.com/media/G1nCSNBW0AAYZrS?format=jpg&name=900x900", // imagem exemplo
+        alt: "Jogos Semana4 2025"
+      },
+      {
+        imagem: "https://pbs.twimg.com/media/Gq8yKxvXoAAbt1_?format=jpg&name=900x900", // imagem exemplo
+        alt: "Bye Weeks 2025"
+      },
+      {
+        imagem: "https://i.ibb.co/RpCLNjDp/tankathon-week3.png", // imagem exemplo
+        alt: "Tankathon 2026"
+      },
+      {
+       imagem: "https://i.ibb.co/nsTgRqWr/nflstandings-week3.png", // imagem exemplo
+        alt: "Classificação até a semana 3."
+
+        https://i.ibb.co/RpCLNjDp/tankathon-week3.png
+      }
+    ];
+    // -----------------------------------------------
+
+    const carousel = document.getElementById('carousel');
+    const inner = document.getElementById('carouselInner');
+    const indicatorsBox = document.getElementById('indicators');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    // Criar slides e indicadores dinamicamente
+    noticias.forEach((n, i) => {
+      const slide = document.createElement('div');
+      slide.className = 'carousel-content';
+      if (i === 0) slide.classList.add('active');
+
+      if (n.imagem) {
+        slide.innerHTML = `<img src="${n.imagem}" alt="${n.alt || ''}">`;
+      } else {
+        slide.innerHTML = `<div>
+          <strong style="display:block; font-size:1.25rem; margin-bottom:8px;">${n.titulo}</strong>
+          <span>${n.texto}</span>
+        </div>`;
+      }
+      inner.appendChild(slide);
+
+      // Indicador
+      const dot = document.createElement('div');
+      dot.className = 'indicator' + (i === 0 ? ' active' : '');
+      dot.addEventListener('click', () => {
+        showSlide(i);
+        resetAuto();
+      });
+      indicatorsBox.appendChild(dot);
+    });
+
+    const items = inner.querySelectorAll('.carousel-content');
+    const indicators = indicatorsBox.querySelectorAll('.indicator');
+    let currentIndex = 0;
+    let interval = null;
+    const DELAY = 5000;
+
+    function showSlide(index) {
+      index = (index + items.length) % items.length;
+      items.forEach((it, i) => it.classList.toggle('active', i === index));
+      indicators.forEach((dot, i) => dot.classList.toggle('active', i === index));
+      currentIndex = index;
+    }
+
+    function nextSlide() { showSlide(currentIndex + 1); }
+    function prevSlide() { showSlide(currentIndex - 1); }
+
+    function startAuto() {
+      stopAuto();
+      interval = setInterval(nextSlide, DELAY);
+    }
+
+    function stopAuto() {
+      if (interval) clearInterval(interval);
+      interval = null;
+    }
+
+    function resetAuto() { startAuto(); }
+
+    prevBtn.addEventListener('click', () => { prevSlide(); resetAuto(); });
+    nextBtn.addEventListener('click', () => { nextSlide(); resetAuto(); });
+
+    carousel.addEventListener('mouseenter', stopAuto);
+    carousel.addEventListener('mouseleave', startAuto);
+
+    carousel.tabIndex = 0;
+    carousel.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') { nextSlide(); resetAuto(); }
+      if (e.key === 'ArrowLeft') { prevSlide(); resetAuto(); }
+    });
+
+    startAuto();
+
+  
 </script>
 </body>
 </html>
