@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Awaken - v37.9 - 10OUT25</title>
+  <title>Awaken - v37.11 - 10OUT25</title>
   <style>
     :root{
       --bg-left-dark: linear-gradient(90deg, rgba(10,10,10,1) 0%, rgba(40,40,40,0.9) 60%);
@@ -314,7 +314,7 @@
 	 <!-- <div style="position:sticky; top:10px; display:flex; justify-content:flex-end;"> -->
         <button class="dark-toggle" id="darkToggle">🌙 OFF</button>
       <!--</div> -->
-        <img src="https://i.ibb.co/0j7zSGbY/jogos-week6.png" alt="Jogos Semana 6 - 2025">
+        <img src="https://i.ibb.co/TMc5pJ0R/jogos-week6-pckt.png" alt="Jogos Semana 6 - 2025">
 	<div> 
 </div>
       </div>
@@ -388,7 +388,8 @@ document.getElementById("darkToggle").addEventListener("click", ()=>{
 function statusClass(status){
   if(!status) return "status-Healthy";
   if(status === "Out") return "status-Out";
-  if(status === "Questionable" || status === "Doubtful") return "status-Questionable";
+  if(status === "Doubtful") return "status-Doubtful";
+  if(status === "Questionable") return "status-Questionable";
   if(status === "IR") return "status-IR";
   if(status === "Suspended") return "status-Suspended";
   return "status-Healthy";
@@ -836,7 +837,7 @@ async function buscarFranchisePlayers(){
           const emptyDiv = document.createElement("div");
           emptyDiv.className = "empty-pos";
           emptyDiv.textContent = `Alerta de ${emptiesLocal.countEmpty} Posições sem Jogador escalado: ${names}`;
-          containerPlayers.appendChild(emptyDiv);
+          containerPlayers.appendChild(emptyDiv); //tem algum erro aqui
         }
 
         // non-healthy list
