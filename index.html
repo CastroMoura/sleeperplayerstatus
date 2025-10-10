@@ -100,9 +100,9 @@
       height: calc(100vh - 80px);
       box-sizing: border-box;
     }
-    .col-left { width:25%; overflow:auto; }
+    .col-left { width:25%; min-width:200px; overflow:auto; }
     .col-center { width:45%; overflow:auto; }
-    .col-right { width:30%; position:relative; overflow:auto; }
+    .col-right { width:30%; min-width:180px; position:relative; overflow:auto; }
 
     header { margin-bottom:12px; }
     header h1 { font-size:18px; margin:0; }
@@ -164,8 +164,7 @@
 
     .status-pill { padding:6px 10px;border-radius:999px;color:#fff;font-weight:700;font-size:13px; }
     .status-Out { background:#b71c1c; }
-    .status-Questionable{ background: #FFDB58;}
-	.status-Doubtful { background:#ffa500; }
+    .status-Questionable, .status-Doubtful { background:var(--orange); }
     .status-IR { background:#6a1b9a; }
     .status-Suspended { background:#424242; }
     .status-Healthy { background:#2e7d32; color:#fff; }
@@ -195,15 +194,16 @@
     footer a { color:var(--accent); text-decoration:none; font-weight:700; }
 
     /* responsive */
-    <!-- @media (max-width:1000px){
+    @media (max-width:1000px){
       .col-left, .col-right { display:none; }
       .col-center { width:100%; }
       .page { padding:12px; }
       .carousel { height: 280px; }
       .carousel-content { font-size: 1rem; padding: 16px; }
       .carousel button { width: 40px; height: 40px; }
+
     }
- -->
+
   .carousel {
 	align-itens:center;
       position: relative;
@@ -302,7 +302,8 @@
     .indicator.active {
       background: #fff;
     }
-    
+
+
   </style>
 </head>
 <body>
@@ -310,17 +311,11 @@
     <!-- COLUNA ESQUERDA: pesquisas (30%) -->
     <div class="col-left">
       <header>
-         <left><img src="https://i.ibb.co/KxQgNLnp/awaken225.png" height="55px" width="255" alt="Awaken"></left>
-		  <div class="controls">
-      <button id="zoom-In" class="zoom-btn" title="Aumentar ( + )" aria-label="Aumentar zoom">🔍+</button> &nbsp;
-      <button id="zoom-Out" class="zoom-btn" title="Diminuir ( - )" aria-label="Diminuir zoom">🔍-</button> &nbsp;
-      <button id="reset" class="zoom-btn" title="Resetar zoom (0)" aria-label="Resetar zoom">⟳</button>&nbsp;
-	  <div id="zoomLabel" class="zoom-label" aria-live="polite">100%</div>
-      <button id="darkToggle" class="zoom-btn" title="DarkMode">🌙 / ☀️</button> &nbsp;
-    </div>	
- 	  </header> 
-    <main class="brand">
-		<div>Atenção: As buscas ainda não verificam jogadores de bye.</div>
+        <div>
+          <h1>Awaken</h1>
+          <div class="brand">Um complemento para pesquisas do Sleeper Fantasy.</div>
+        </div>
+      </header>
 
       <!-- 1) Por usuário (agora a primeira) -->
       <div class="panel">
@@ -400,9 +395,15 @@
       <div id="resultado"></div>
     </div>
 
-    <!-- COLUNA DIREITA -->
-       <div class="col-right">
- 
+    <!-- COLUNA DIREITA: reservado + dark mode top -->
+        <div class="col-right">
+      <div align=center>
+    <button id="darkToggle" class="zoom-btn"title="DarkMode" >🌙 Dark Mode</button> &nbsp;
+    <button id="zoomIn" class="zoom-btn" title="Aumentar ( + )" aria-label="Aumentar zoom">+</button>&nbsp;
+    <button id="zoomOut" class="zoom-btn" title="Diminuir ( - )" aria-label="Diminuir zoom">-</button>&nbsp;
+    <button id="reset" class="zoom-btn" title="Resetar zoom (0)" aria-label="Resetar zoom">⟳</button>&nbsp;
+    <div>&nbsp;</div>
+    </div>
     <div align=center>
   <div class="carousel" id="carousel" aria-roledescription="carousel">
     <div class="carousel-inner" id="carouselInner"></div>
@@ -421,12 +422,12 @@
     </div> <!-- fim col-right -->
 
   </div> <!-- fim page -->
-</main>
+
   <footer>
     <div id="accessCount">GMs em ação: 0</div>
     <div><a href="mailto:scrum.moura@gmail.com">Algo errado? Novas ideias? Manda pra cá.</a></div>
   </footer>
-	
+
 <script>
 /* --------------------------
    Dados estáticos: 32 times (nomes completos)
@@ -472,22 +473,8 @@ const franchiseActions = document.getElementById("franchiseActions");
 /* dark toggle */
 document.getElementById("darkToggle").addEventListener("click", ()=>{
   document.body.classList.toggle("dark");
-  document.getElementById("darkToggle").textContent = document.body.classList.contains("dark") ? "☀️ /🌙";
+  document.getElementById("darkToggle").textContent = document.body.classList.contains("dark") ? "☀️ Light Mode" : "🌙 Dark Mode";
 });
-
-// Zoom In/Out
-let fontSize = 16;
-
-document.getElementById("zoom-in").addEventListener("click", () => {
-  fontSize += 1;
-  document.body.style.fontSize = `${fontSize}px`;
-});
-
-document.getElementById("zoom-out").addEventListener("click", () => {
-  fontSize = Math.max(12, fontSize - 1);
-  document.body.style.fontSize = `${fontSize}px`;
-});
-
 
 /* access counter */
 (function accessCounter(){
@@ -501,8 +488,7 @@ document.getElementById("zoom-out").addEventListener("click", () => {
 function statusClass(status){
   if(!status) return "status-Healthy";
   if(status === "Out") return "status-Out";
-  if(status === "Questionable" return "status-Questionable";
-  if(status === "Doubtful") return "status-Doubtful";
+  if(status === "Questionable" || status === "Doubtful") return "status-Questionable";
   if(status === "IR") return "status-IR";
   if(status === "Suspended") return "status-Suspended";
   return "status-Healthy";
@@ -510,8 +496,7 @@ function statusClass(status){
 function getColorForStatus(status){
   switch(status){
     case "Out": return "#b71c1c";
-    case "Questionable":return "#FFDB58";
-	case "Doubtful": return "#ef6c00";
+    case "Questionable": case "Doubtful": return "#ef6c00";
     case "IR": return "#6a1b9a";
     case "Suspended": return "#424242";
     default: return "#2e7d32";
@@ -1293,6 +1278,7 @@ function toggleTeamBody(el){
   const isOpen = body.style.display === "block";
   body.style.display = isOpen ? "none" : "block";
 }
+
 const noticias = [
       {
         imagem: "https://i.ibb.co/0j7zSGbY/jogos-week6.png", // imagem exemplo
@@ -1387,7 +1373,6 @@ const noticias = [
 
     startAuto();
 
-  
 </script>
 </body>
 </html>
