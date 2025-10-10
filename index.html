@@ -100,9 +100,9 @@
       height: calc(100vh - 80px);
       box-sizing: border-box;
     }
-    .col-left { width:25%; min-width:200px; overflow:auto; }
+    .col-left { width:25%; overflow:auto; }
     .col-center { width:45%; overflow:auto; }
-    .col-right { width:30%; min-width:180px; position:relative; overflow:auto; }
+    .col-right { width:30%; position:relative; overflow:auto; }
 
     header { margin-bottom:12px; }
     header h1 { font-size:18px; margin:0; }
@@ -164,7 +164,8 @@
 
     .status-pill { padding:6px 10px;border-radius:999px;color:#fff;font-weight:700;font-size:13px; }
     .status-Out { background:#b71c1c; }
-    .status-Questionable, .status-Doubtful { background:var(--orange); }
+    .status-Questionable{ background: #FFDB58;}
+	.status-Doubtful { background:#ffa500; }
     .status-IR { background:#6a1b9a; }
     .status-Suspended { background:#424242; }
     .status-Healthy { background:#2e7d32; color:#fff; }
@@ -310,7 +311,7 @@
     <div class="col-left">
       <header>
         <div>
-          <h1>Awaken</h1>
+          <left><img src="https://i.ibb.co/KxQgNLnp/awaken225.png" height="55px" width="255" alt="Awaken"></left>
           <div class="brand">Atenção: As buscas ainda não verificam jogadores de bye.</div>
         </div>
       </header>
@@ -396,7 +397,7 @@
     <!-- COLUNA DIREITA: reservado + dark mode top -->
        <div class="col-right">
       <div align=center>
-    <button id="darkToggle" class="zoom-btn"title="DarkMode" >🌙 Dark Mode</button> &nbsp;
+    <button id="darkToggle" class="zoom-btn"title="DarkMode" >🌙 / ☀️</button> &nbsp;
     <button id="zoomIn" class="zoom-btn" title="Aumentar ( + )" aria-label="Aumentar zoom">+</button>&nbsp;
     <button id="zoomOut" class="zoom-btn" title="Diminuir ( - )" aria-label="Diminuir zoom">-</button>&nbsp;
     <button id="reset" class="zoom-btn" title="Resetar zoom (0)" aria-label="Resetar zoom">⟳</button>&nbsp;
