@@ -312,15 +312,14 @@
       <header>
          <left><img src="https://i.ibb.co/KxQgNLnp/awaken225.png" height="55px" width="255" alt="Awaken"></left>
 		  <div class="controls">
-      <button id="zoomIn" class="zoom-btn" title="Aumentar ( + )" aria-label="Aumentar zoom">🔍+</button> &nbsp;
-      <button id="zoomOut" class="zoom-btn" title="Diminuir ( - )" aria-label="Diminuir zoom">🔍-</button> &nbsp;
+      <button id="zoom-In" class="zoom-btn" title="Aumentar ( + )" aria-label="Aumentar zoom">🔍+</button> &nbsp;
+      <button id="zoom-Out" class="zoom-btn" title="Diminuir ( - )" aria-label="Diminuir zoom">🔍-</button> &nbsp;
       <button id="reset" class="zoom-btn" title="Resetar zoom (0)" aria-label="Resetar zoom">⟳</button>&nbsp;
       <button id="darkToggle" class="zoom-btn" title="DarkMode">🌙 / ☀️</button> &nbsp;
     </div>	
- 	  
-    <main class="brand">Atenção: As buscas ainda não verificam jogadores de bye.</div>
-        </div>
-      </header>
+ 	  </header> 
+    <main class="brand">
+		<div>Atenção: As buscas ainda não verificam jogadores de bye.</div>
 
       <!-- 1) Por usuário (agora a primeira) -->
       <div class="panel">
@@ -421,12 +420,13 @@
     </div> <!-- fim col-right -->
 
   </div> <!-- fim page -->
-
+</main>
   <footer>
     <div id="accessCount">GMs em ação: 0</div>
     <div><a href="mailto:scrum.moura@gmail.com">Algo errado? Novas ideias? Manda pra cá.</a></div>
   </footer>
-
+</body>
+	
 <script>
 /* --------------------------
    Dados estáticos: 32 times (nomes completos)
@@ -475,6 +475,20 @@ document.getElementById("darkToggle").addEventListener("click", ()=>{
   document.getElementById("darkToggle").textContent = document.body.classList.contains("dark") ? "☀️ Light Mode" : "🌙 Dark Mode";
 });
 
+// Zoom In/Out
+let fontSize = 16;
+
+document.getElementById("zoom-in").addEventListener("click", () => {
+  fontSize += 1;
+  document.body.style.fontSize = `${fontSize}px`;
+});
+
+document.getElementById("zoom-out").addEventListener("click", () => {
+  fontSize = Math.max(12, fontSize - 1);
+  document.body.style.fontSize = `${fontSize}px`;
+});
+
+
 /* access counter */
 (function accessCounter(){
   let n = Number(localStorage.getItem("acessosSleeper") || 0);
@@ -495,7 +509,8 @@ function statusClass(status){
 function getColorForStatus(status){
   switch(status){
     case "Out": return "#b71c1c";
-    case "Questionable": case "Doubtful": return "#ef6c00";
+    case "Questionable":return "#FFDB58";
+	case "Doubtful": return "#ef6c00";
     case "IR": return "#6a1b9a";
     case "Suspended": return "#424242";
     default: return "#2e7d32";
