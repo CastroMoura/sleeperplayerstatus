@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Awaken - v37.6 - 10OUT25</title>
+  <title>Awaken - v37.8 - 10OUT25</title>
   <style>
     :root{
       --bg-left-dark: linear-gradient(90deg, rgba(10,10,10,1) 0%, rgba(40,40,40,0.9) 60%);
@@ -31,7 +31,7 @@
       color:#eaeaea;
     }
 
-
+/*
     .viewport{
       display:flex;
       align-items:center;
@@ -41,9 +41,9 @@
       padding:40px;
       box-sizing:border-box;
     }
-
+*/
     /* Tornar o elemento inline-block facilita o scale visual em alguns navegadores */
-    #zoomable{
+  /*  #zoomable{
       display:inline-block;
       width:min(1100px,95%);
       background:linear-gradient(180deg, #fff 0%, #fbfdff 100%);
@@ -107,7 +107,7 @@
       :root{ --btn-size:42px; }
       #zoomable{ padding:18px; }
     }
-
+*/
 
     /* layout 3 colunas */
     .page {
@@ -117,9 +117,9 @@
       height: calc(100vh - 80px);
       box-sizing: border-box;
     }
-    .col-left { width:35%; min-width:200px; overflow:auto; }
+    .col-left { width:35%; overflow:auto; }
     .col-center { width:55%; overflow:auto; }
-    .col-right { width:15%; min-width:180px; position:relative; overflow:auto; }
+    .col-right { width:15%; position:relative; overflow:auto; }
 
     header { margin-bottom:12px; }
     header h1 { font-size:18px; margin:0; }
@@ -181,8 +181,8 @@
 
     .status-pill { padding:6px 10px;border-radius:999px;color:#fff;font-weight:700;font-size:13px; }
     .status-Out { background:#b71c1c; }
-    .status-Questionable { background:#b71c1c; }
-	.status-Doubtful { background:#ef6c00; }
+    .status-Questionable { background:#FFBF00; }
+	.status-Doubtful { background:#FF5C00; }
     .status-IR { background:#6a1b9a; }
     .status-Suspended { background:#424242; }
     .status-Healthy { background:#2e7d32; color:#fff; }
@@ -310,12 +310,11 @@
 
     <!-- COLUNA DIREITA: reservado + dark mode top -->
     <div class="col-right">
-      <div style="position:sticky; top:10px; display:flex; justify-content:flex-end;">
-        <button class="dark-toggle" id="darkToggle">🌙 OFF</button>
-      </div>
-
       <div style="margin-top:18px;" class="panel">
-        <img src="https://i.ibb.co/0j7zSGbY/jogos-week6.png" width="40%" height="40%" alt="Jogos Semana 6 - 2025">
+	 <!-- <div style="position:sticky; top:10px; display:flex; justify-content:flex-end;"> -->
+        <button class="dark-toggle" id="darkToggle">🌙 OFF</button>
+      <!--</div> -->
+        <img src="https://i.ibb.co/0j7zSGbY/jogos-week6.png" alt="Jogos Semana 6 - 2025">
 	<div> 
 </div>
       </div>
@@ -397,8 +396,8 @@ function statusClass(status){
 function getColorForStatus(status){
   switch(status){
     case "Out": return "#b71c1c";
-	case "Doubtful": return "#ef6c00";
-    case "Questionable": return "#FFDB58";
+	case "Doubtful": return "#FF5C00";
+    case "Questionable": return "#FFBF00";
     case "IR": return "#6a1b9a";
     case "Suspended": return "#424242";
     default: return "#2e7d32";
