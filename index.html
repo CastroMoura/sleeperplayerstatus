@@ -164,7 +164,8 @@
 
     .status-pill { padding:6px 10px;border-radius:999px;color:#fff;font-weight:700;font-size:13px; }
     .status-Out { background:#b71c1c; }
-    .status-Questionable, .status-Doubtful { background:var(--orange); }
+    .status-Questionable{ background:#FFDB58; }
+    .status-Doubtful { background:#ef6c00); }
     .status-IR { background:#6a1b9a; }
     .status-Suspended { background:#424242; }
     .status-Healthy { background:#2e7d32; color:#fff; }
@@ -310,13 +311,14 @@
   <div class="page">
     <!-- COLUNA ESQUERDA: pesquisas (30%) -->
     <div class="col-left">
-      <header>
-        <div>
-          <h1>Awaken</h1>
-          <div class="brand">Um complemento para pesquisas do Sleeper Fantasy.</div>
-        </div>
-      </header>
-
+  <header>
+    <left><img src="https://i.ibb.co/KxQgNLnp/awaken225.png" height="55px" width="255" alt="Awaken"></left>
+    <div class="controls">
+      <button id="zoom-in">🔍+</button>
+      <button id="zoom-out">🔍-</button>
+      <button id="toggle-mode">🌙 / ☀️</button>
+    </div>
+  </header>
       <!-- 1) Por usuário (agora a primeira) -->
       <div class="panel">
         <h3>Como está a saúde do jogadores de todos os meus times?</h3>
@@ -473,7 +475,7 @@ const franchiseActions = document.getElementById("franchiseActions");
 /* dark toggle */
 document.getElementById("darkToggle").addEventListener("click", ()=>{
   document.body.classList.toggle("dark");
-  document.getElementById("darkToggle").textContent = document.body.classList.contains("dark") ? "☀️ Light Mode" : "🌙 Dark Mode";
+  document.getElementById("darkToggle").textContent = document.body.classList.contains("dark") ? "☀️ /🌙 "☀️ /🌙 ";
 });
 
 /* access counter */
@@ -488,7 +490,8 @@ document.getElementById("darkToggle").addEventListener("click", ()=>{
 function statusClass(status){
   if(!status) return "status-Healthy";
   if(status === "Out") return "status-Out";
-  if(status === "Questionable" || status === "Doubtful") return "status-Questionable";
+  if(status === "Questionable" return "status-Questionable";
+  if(status === "Doubtful") return "status-Doubtful";
   if(status === "IR") return "status-IR";
   if(status === "Suspended") return "status-Suspended";
   return "status-Healthy";
@@ -496,7 +499,8 @@ function statusClass(status){
 function getColorForStatus(status){
   switch(status){
     case "Out": return "#b71c1c";
-    case "Questionable": case "Doubtful": return "#ef6c00";
+    case "Questionable":return "#FFDB58";
+	case "Doubtful": return "#ef6c00";
     case "IR": return "#6a1b9a";
     case "Suspended": return "#424242";
     default: return "#2e7d32";
