@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Awaken - v36 - 10OUT25</title>
+  <title>Awaken - v37 - 10OUT25</title>
   <style>
     :root{
       --bg-left-dark: linear-gradient(90deg, rgba(10,10,10,1) 0%, rgba(40,40,40,0.9) 60%);
@@ -164,8 +164,7 @@
 
     .status-pill { padding:6px 10px;border-radius:999px;color:#fff;font-weight:700;font-size:13px; }
     .status-Out { background:#b71c1c; }
-    .status-Questionable{ background:#FFDB58; }
-    .status-Doubtful { background:#ef6c00); }
+    .status-Questionable, .status-Doubtful { background:var(--orange); }
     .status-IR { background:#6a1b9a; }
     .status-Suspended { background:#424242; }
     .status-Healthy { background:#2e7d32; color:#fff; }
@@ -303,18 +302,21 @@
     .indicator.active {
       background: #fff;
     }
+
+
   </style>
 </head>
 <body>
   <div class="page">
     <!-- COLUNA ESQUERDA: pesquisas (30%) -->
     <div class="col-left">
-    <left><img src="https://i.ibb.co/KxQgNLnp/awaken225.png" height="55px" width="255" alt="Awaken"></left>
-    <div class="controls">
-      <button id="zoom-in">🔍+</button>
-      <button id="zoom-out">🔍-</button>
-      <button id="toggle-mode">🌙 / ☀️</button>
-    </div>
+      <header>
+        <div>
+          <h1>Awaken</h1>
+          <div class="brand">Um complemento para pesquisas do Sleeper Fantasy.</div>
+        </div>
+      </header>
+
       <!-- 1) Por usuário (agora a primeira) -->
       <div class="panel">
         <h3>Como está a saúde do jogadores de todos os meus times?</h3>
@@ -395,7 +397,13 @@
 
     <!-- COLUNA DIREITA: reservado + dark mode top -->
         <div class="col-right">
-
+      <div align=center>
+    <button id="darkToggle" class="zoom-btn"title="DarkMode" >🌙 Dark Mode</button> &nbsp;
+    <button id="zoomIn" class="zoom-btn" title="Aumentar ( + )" aria-label="Aumentar zoom">+</button>&nbsp;
+    <button id="zoomOut" class="zoom-btn" title="Diminuir ( - )" aria-label="Diminuir zoom">-</button>&nbsp;
+    <button id="reset" class="zoom-btn" title="Resetar zoom (0)" aria-label="Resetar zoom">⟳</button>&nbsp;
+    <div>&nbsp;</div>
+    </div>
     <div align=center>
   <div class="carousel" id="carousel" aria-roledescription="carousel">
     <div class="carousel-inner" id="carouselInner"></div>
@@ -465,7 +473,7 @@ const franchiseActions = document.getElementById("franchiseActions");
 /* dark toggle */
 document.getElementById("darkToggle").addEventListener("click", ()=>{
   document.body.classList.toggle("dark");
-  document.getElementById("darkToggle").textContent = document.body.classList.contains("dark") ? "☀️ /🌙 "☀️ /🌙 ";
+  document.getElementById("darkToggle").textContent = document.body.classList.contains("dark") ? "☀️ Light Mode" : "🌙 Dark Mode";
 });
 
 /* access counter */
@@ -480,8 +488,7 @@ document.getElementById("darkToggle").addEventListener("click", ()=>{
 function statusClass(status){
   if(!status) return "status-Healthy";
   if(status === "Out") return "status-Out";
-  if(status === "Questionable" return "status-Questionable";
-  if(status === "Doubtful") return "status-Doubtful";
+  if(status === "Questionable" || status === "Doubtful") return "status-Questionable";
   if(status === "IR") return "status-IR";
   if(status === "Suspended") return "status-Suspended";
   return "status-Healthy";
@@ -489,8 +496,7 @@ function statusClass(status){
 function getColorForStatus(status){
   switch(status){
     case "Out": return "#b71c1c";
-    case "Questionable":return "#FFDB58";
-	case "Doubtful": return "#ef6c00";
+    case "Questionable": case "Doubtful": return "#ef6c00";
     case "IR": return "#6a1b9a";
     case "Suspended": return "#424242";
     default: return "#2e7d32";
@@ -1276,7 +1282,7 @@ function toggleTeamBody(el){
 const noticias = [
       {
         imagem: "https://i.ibb.co/0j7zSGbY/jogos-week6.png", // imagem exemplo
-        alt: "Jogos Semana 6 2025"
+        alt: "Jogos Semana 6 - 2025"
       },
       {
         imagem: "https://pbs.twimg.com/media/Gq8yKxvXoAAbt1_?format=jpg&name=900x900", // imagem exemplo
@@ -1284,11 +1290,11 @@ const noticias = [
       },
       {
         imagem: "https://i.ibb.co/Pz565RXh/tankathon-week6.png", // imagem exemplo
-        alt: "Tankathon 2026 - Posições semana 6"
+        alt: "Tankathon 2026"
       },
       {
-       imagem: "https://i.ibb.co/FbKyVLfC/classificacao-week5.png", // imagem exemplo
-        alt: "Classificação até a semana 5."
+         imagem: "https://i.ibb.co/FbKyVLfC/classificacao-week5.png", // imagem exemplo
+        alt: "Classificação Semana 5 - 2025"
       }
     ];
     // -----------------------------------------------
