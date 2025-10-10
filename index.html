@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Awaken - v37.2 - 10OUT25</title>
+  <title>Awaken - v37.4 - 10OUT25</title>
   <style>
     :root{
       --bg-left-dark: linear-gradient(90deg, rgba(10,10,10,1) 0%, rgba(40,40,40,0.9) 60%);
@@ -30,7 +30,19 @@
       background-size:auto 100%;
       color:#eaeaea;
     }
-   /* Tornar o elemento inline-block facilita o scale visual em alguns navegadores */
+
+
+    .viewport{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      height:100%;
+      overflow:auto;
+      padding:40px;
+      box-sizing:border-box;
+    }
+
+    /* Tornar o elemento inline-block facilita o scale visual em alguns navegadores */
     #zoomable{
       display:inline-block;
       width:min(1100px,95%);
@@ -43,8 +55,7 @@
       will-change: transform;
     }
 
-
-  .zoom-controls{
+    .zoom-controls{
       position:fixed;
       right:18px;
       bottom:18px;
@@ -54,8 +65,6 @@
       align-items:center;
       z-index:9999;
     }
-
-
 
     .zoom-btn{
       width:var(--btn-size);
@@ -72,6 +81,7 @@
       cursor:pointer;
       transition:transform .08s ease, box-shadow .12s ease;
     }
+
     .zoom-btn:active{ transform: translateY(1px) scale(.98); }
     .zoom-btn[aria-disabled="true"], .zoom-btn:disabled{ opacity:.45; cursor:not-allowed; pointer-events:none; }
 
@@ -82,15 +92,22 @@
       padding:6px 8px;
       border-radius:8px;
       margin-top:6px;
-      min-width:14px;
+      min-width:64px;
       text-align:center;
     }
 
     .reset-btn{
-      width:36px;height:36px;font-size:14px;border-radius:8px;
-      background:#f2f4f8;color:#0b67ff;box-shadow:none;
-      border:1px solid rgba(11,103,255,0.06);
+      width:36px;height:36px;font-size:14px;border-radius:8px;background:#f2f4f8;color:#0b67ff;box-shadow:none;border:1px solid rgba(11,103,255,0.06);
     }
+
+    h1{ margin:0 0 8px 0; font-size:22px; }
+    p{ margin:0 0 12px 0; line-height:1.5; }
+
+    @media (max-width:520px){
+      :root{ --btn-size:42px; }
+      #zoomable{ padding:18px; }
+    }
+
 
     /* layout 3 colunas */
     .page {
@@ -100,9 +117,9 @@
       height: calc(100vh - 80px);
       box-sizing: border-box;
     }
-    .col-left { width:25%; min-width:200px; overflow:auto; }
-    .col-center { width:45%; overflow:auto; }
-    .col-right { width:30%; min-width:180px; position:relative; overflow:auto; }
+    .col-left { width:35%; min-width:200px; overflow:auto; }
+    .col-center { width:55%; overflow:auto; }
+    .col-right { width:15%; min-width:180px; position:relative; overflow:auto; }
 
     header { margin-bottom:12px; }
     header h1 { font-size:18px; margin:0; }
@@ -164,8 +181,7 @@
 
     .status-pill { padding:6px 10px;border-radius:999px;color:#fff;font-weight:700;font-size:13px; }
     .status-Out { background:#b71c1c; }
-    .status-Questionable { background:#FFDB58; }
-	.status-Doubtful { background: #ef6c00; }
+    .status-Questionable, .status-Doubtful { background:var(--orange); }
     .status-IR { background:#6a1b9a; }
     .status-Suspended { background:#424242; }
     .status-Healthy { background:#2e7d32; color:#fff; }
@@ -199,112 +215,7 @@
       .col-left, .col-right { display:none; }
       .col-center { width:100%; }
       .page { padding:12px; }
-      .carousel { height: 280px; }
-      .carousel-content { font-size: 1rem; padding: 16px; }
-      .carousel button { width: 40px; height: 40px; }
-
     }
-
-  .carousel {
-	align-itens:center;
-      position: relative;
-      width: 330px;
-      max-width: 98%;
-      height: 420px;
-      overflow: hidden;
-      border-radius: 12px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.18);
-      background: linear-gradient(180deg,#0f1724,#071226);
-      color: #fff;
-    }
-
-    .carousel-inner {
-      position: relative;
-      width: 100%;
-      height: 100%;
-    }
-
-    .carousel-content {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      box-sizing: border-box;
-      text-align: center;
-      font-size: 1.15rem;
-      line-height: 1.3;
-      opacity: 0;
-      transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
-      transform: translateY(8px);
-      z-index: 1;
-    }
-
-    .carousel-content.active {
-      opacity: 1;
-      transform: translateY(0);
-      z-index: 2;
-    }
-
-    .carousel-content img {
-      max-width: 100%;
-      max-height: 100%;
-      border-radius: 8px;
-      object-fit: cover;
-    }
-
-    /* Botões */
-    .carousel button {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.12);
-      color: #fff;
-      width: 46px;
-      height: 46px;
-      font-size: 1.4rem;
-      cursor: pointer;
-      border-radius: 50%;
-      outline: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 10;
-      user-select: none;
-    }
-
-    .carousel button:hover { background: rgba(255,255,255,0.18); }
-
-    .prev { left: 12px; }
-    .next { right: 12px; }
-
-    /* Indicadores */
-    .indicators {
-      position: absolute;
-      bottom: 12px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 8px;
-      z-index: 10;
-    }
-
-    .indicator {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.5);
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    .indicator.active {
-      background: #fff;
-    }
-
-
   </style>
 </head>
 <body>
@@ -313,7 +224,7 @@
     <div class="col-left">
       <header>
         <div>
-          <h1>Awaken</h1>
+          <h1><img src="https://i.ibb.co/KxQgNLnp/awaken225.png"></h1>
           <div class="brand">Um complemento para pesquisas do Sleeper Fantasy.</div>
         </div>
       </header>
@@ -397,31 +308,18 @@
     </div>
 
     <!-- COLUNA DIREITA: reservado + dark mode top -->
-        <div class="col-right">
-      <div align=center>
-    <button id="darkToggle" class="zoom-btn"title="DarkMode" >🌙 Dark Mode</button> &nbsp;
-    <button id="zoomIn" class="zoom-btn" title="Aumentar ( + )" aria-label="Aumentar zoom">+</button>&nbsp;
-    <button id="zoomOut" class="zoom-btn" title="Diminuir ( - )" aria-label="Diminuir zoom">-</button>&nbsp;
-    <button id="reset" class="zoom-btn" title="Resetar zoom (0)" aria-label="Resetar zoom">⟳</button>&nbsp;
-    <div>&nbsp;</div>
-    </div>
-    <div align=center>
-  <div class="carousel" id="carousel" aria-roledescription="carousel">
-    <div class="carousel-inner" id="carouselInner"></div>
+    <div class="col-right">
+      <div style="position:sticky; top:10px; display:flex; justify-content:flex-end;">
+        <button class="dark-toggle" id="darkToggle">☀️ ON</button>
+      </div>
 
-    <button class="prev" aria-label="Anterior" id="prevBtn">‹</button>
-    <button class="next" aria-label="Próximo" id="nextBtn">›</button>
-
-    <div class="indicators" id="indicators"></div>
-  </div>
-
-        </div>
-
-
+      <div style="margin-top:18px;" class="panel">
+        <img src="https://i.ibb.co/0j7zSGbY/jogos-week6.png" width="330px" height="420px" alt="Jogos Semana 6 - 2025">
+	<div> 
+</div>
       </div>
 
     </div> <!-- fim col-right -->
-
   </div> <!-- fim page -->
 
   <footer>
@@ -430,6 +328,7 @@
   </footer>
 
 <script>
+
 /* --------------------------
    Dados estáticos: 32 times (nomes completos)
    -------------------------- */
@@ -474,7 +373,7 @@ const franchiseActions = document.getElementById("franchiseActions");
 /* dark toggle */
 document.getElementById("darkToggle").addEventListener("click", ()=>{
   document.body.classList.toggle("dark");
-  document.getElementById("darkToggle").textContent = document.body.classList.contains("dark") ? "☀️ Light Mode" : "🌙 Dark Mode";
+  document.getElementById("darkToggle").textContent = document.body.classList.contains("dark") ? "☀️ ON" : "🌙 OFF";
 });
 
 /* access counter */
@@ -497,8 +396,8 @@ function statusClass(status){
 function getColorForStatus(status){
   switch(status){
     case "Out": return "#b71c1c";
-    case "Questionable" return "#FFDB58";
 	case "Doubtful": return "#ef6c00";
+    case "Questionable": return "#FFDB58";
     case "IR": return "#6a1b9a";
     case "Suspended": return "#424242";
     default: return "#2e7d32";
@@ -1280,101 +1179,6 @@ function toggleTeamBody(el){
   const isOpen = body.style.display === "block";
   body.style.display = isOpen ? "none" : "block";
 }
-
-const noticias = [
-      {
-        imagem: "https://i.ibb.co/0j7zSGbY/jogos-week6.png", // imagem exemplo
-        alt: "Jogos Semana 6 - 2025"
-      },
-      {
-        imagem: "https://pbs.twimg.com/media/Gq8yKxvXoAAbt1_?format=jpg&name=900x900", // imagem exemplo
-        alt: "Bye Weeks 2025"
-      },
-      {
-        imagem: "https://i.ibb.co/Pz565RXh/tankathon-week6.png", // imagem exemplo
-        alt: "Tankathon 2026"
-      },
-      {
-         imagem: "https://i.ibb.co/FbKyVLfC/classificacao-week5.png", // imagem exemplo
-        alt: "Classificação Semana 5 - 2025"
-      }
-    ];
-    // -----------------------------------------------
-
-    const carousel = document.getElementById('carousel');
-    const inner = document.getElementById('carouselInner');
-    const indicatorsBox = document.getElementById('indicators');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-
-    // Criar slides e indicadores dinamicamente
-    noticias.forEach((n, i) => {
-      const slide = document.createElement('div');
-      slide.className = 'carousel-content';
-      if (i === 0) slide.classList.add('active');
-
-      if (n.imagem) {
-        slide.innerHTML = `<img src="${n.imagem}" alt="${n.alt || ''}">`;
-      } else {
-        slide.innerHTML = `<div>
-          <strong style="display:block; font-size:1.25rem; margin-bottom:8px;">${n.titulo}</strong>
-          <span>${n.texto}</span>
-        </div>`;
-      }
-      inner.appendChild(slide);
-
-      // Indicador
-      const dot = document.createElement('div');
-      dot.className = 'indicator' + (i === 0 ? ' active' : '');
-      dot.addEventListener('click', () => {
-        showSlide(i);
-        resetAuto();
-      });
-      indicatorsBox.appendChild(dot);
-    });
-
-    const items = inner.querySelectorAll('.carousel-content');
-    const indicators = indicatorsBox.querySelectorAll('.indicator');
-    let currentIndex = 0;
-    let interval = null;
-    const DELAY = 5000;
-
-    function showSlide(index) {
-      index = (index + items.length) % items.length;
-      items.forEach((it, i) => it.classList.toggle('active', i === index));
-      indicators.forEach((dot, i) => dot.classList.toggle('active', i === index));
-      currentIndex = index;
-    }
-
-    function nextSlide() { showSlide(currentIndex + 1); }
-    function prevSlide() { showSlide(currentIndex - 1); }
-
-    function startAuto() {
-      stopAuto();
-      interval = setInterval(nextSlide, DELAY);
-    }
-
-    function stopAuto() {
-      if (interval) clearInterval(interval);
-      interval = null;
-    }
-
-    function resetAuto() { startAuto(); }
-
-    prevBtn.addEventListener('click', () => { prevSlide(); resetAuto(); });
-    nextBtn.addEventListener('click', () => { nextSlide(); resetAuto(); });
-
-    carousel.addEventListener('mouseenter', stopAuto);
-    carousel.addEventListener('mouseleave', startAuto);
-
-    carousel.tabIndex = 0;
-    carousel.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight') { nextSlide(); resetAuto(); }
-      if (e.key === 'ArrowLeft') { prevSlide(); resetAuto(); }
-    });
-
-    startAuto();
-
 </script>
 </body>
 </html>
