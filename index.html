@@ -3,12 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Awaken - v37.13 - 10OUT25</title>
+  <title>Awaken - v37.17 - 11OUT25</title>
   <style>
     :root{
       --bg-left-dark: linear-gradient(90deg, rgba(10,10,10,1) 0%, rgba(40,40,40,0.9) 60%);
       --card-bg: #ffffff;
       --card-text: #222;
+      --accent-color: #1e90ff;
+      --header-height: 60px;
       --accent: #1e90ff;
       --ok: #2e7d32;
       --bad: #b71c1c;
@@ -19,19 +21,21 @@
     body{
       background:
         linear-gradient(to right, rgba(244,244,244,0.97) 60%, rgba(244,244,244,0.85) 80%, transparent 100%),
-        url('https://i.ibb.co/9mWwdssF/chatgpt-jogadoresquestionaveis.png') no-repeat right center fixed;
-      background-size: auto 100%;
+        url('https://i.ibb.co/9mWwdssF/chatgpt-jogadoresquestionaveis.png') no-repeat right center;
+      background-size: auto 100% /* 🔧 cobre toda a tela */
+      background-attachment: scroll; /* 🔧 evita falha em mobile */
       color:var(--card-text);
     }
     body.dark{
       background:
         linear-gradient(to right, rgba(12,12,12,1) 60%, rgba(12,12,12,0.9) 80%, transparent 100%),
-        url('https://i.ibb.co/9mWwdssF/chatgpt-jogadoresquestionaveis.png') no-repeat right center fixed;
-      background-size:auto 100%;
+        url('https://i.ibb.co/9mWwdssF/chatgpt-jogadoresquestionaveis.png') no-repeat right center;
+      background-size: cover;
+      background-attachment: scroll;
       color:#eaeaea;
     }
 
-/*
+/* observar e se necessario retirar
     .viewport{
       display:flex;
       align-items:center;
@@ -42,88 +46,64 @@
       box-sizing:border-box;
     }
 */
-    /* Tornar o elemento inline-block facilita o scale visual em alguns navegadores */
-  /*  #zoomable{
-      display:inline-block;
-      width:min(1100px,95%);
-      background:linear-gradient(180deg, #fff 0%, #fbfdff 100%);
-      border-radius:14px;
-      box-shadow:0 6px 24px rgba(20,30,60,0.08);
-      padding:28px;
-      transform-origin: center center;
-      transition: transform var(--transition-time) ease;
-      will-change: transform;
-    }
 
-    .zoom-controls{
-      position:fixed;
-      right:18px;
-      bottom:18px;
-      display:flex;
-      flex-direction:column;
-      gap:var(--btn-gap);
-      align-items:center;
-      z-index:9999;
-    }
-
-    .zoom-btn{
-      width:var(--btn-size);
-      height:var(--btn-size);
-      border-radius:10px;
-      border:0;
-      background:#0b67ff;
-      color:white;
-      font-weight:600;
-      font-size:20px;
-      display:inline-grid;
-      place-items:center;
-      box-shadow:0 6px 18px rgba(11,103,255,0.18);
-      cursor:pointer;
-      transition:transform .08s ease, box-shadow .12s ease;
-    }
-
-    .zoom-btn:active{ transform: translateY(1px) scale(.98); }
-    .zoom-btn[aria-disabled="true"], .zoom-btn:disabled{ opacity:.45; cursor:not-allowed; pointer-events:none; }
-
-    .zoom-label{
-      background:rgba(0,0,0,0.6);
-      color:#fff;
-      font-size:13px;
-      padding:6px 8px;
-      border-radius:8px;
-      margin-top:6px;
-      min-width:64px;
-      text-align:center;
-    }
-
-    .reset-btn{
-      width:36px;height:36px;font-size:14px;border-radius:8px;background:#f2f4f8;color:#0b67ff;box-shadow:none;border:1px solid rgba(11,103,255,0.06);
-    }
-
-    h1{ margin:0 0 8px 0; font-size:22px; }
-    p{ margin:0 0 12px 0; line-height:1.5; }
-
-    @media (max-width:520px){
-      :root{ --btn-size:42px; }
-      #zoomable{ padding:18px; }
-    }
-*/
 
     /* layout 3 colunas */
     .page {
       display: flex;
+    flex-wrap: wrap; /* 🔧 permite empilhamento natural */
       gap: 18px;
       padding: 28px;
-      height: calc(100vh - 80px);
+      min-height: 100vh; /* 🔧 evita corte em mobile */
+      /* height: calc(100vh - 80px); temporariamente desativado */ 
       box-sizing: border-box;
     }
-    .col-left { width:25%; overflow:auto; }
+    .col-left { width:30%; overflow:auto; }
     .col-center { width:50%; overflow:auto; }
-    .col-right { width:25%; position:relative; overflow:auto; }
+    .col-right { width:20%; overflow:auto; 
+      border-radius:10px;
+      padding:12px;
+      box-shadow:0 6px 20px rgba(0,0,0,0.08);
+      margin-bottom:12px; 
 
-    header { margin-bottom:12px; }
+/* 
+      background:var(--card-bg);
+      color:var(--card-text);
+
+ */
+}
+
+
+
+
+    /* comportamento padrão desktop */
+    @media (min-width: 1001px) {
+      .col-left { flex: 0 0 30%; }
+      .col-center { flex: 0 0 50%; }
+      .col-right { flex: 0 0 15%; }
+    }
+
+    /* comportamento mobile */
+    @media (max-width:1000px){
+      .page { padding: 16px; flex-direction: column; }
+      .col-left, .col-center, .col-right {
+        width: 100%;
+        max-width: 100%;
+        display: block; /* 🔧 mantém todas as seções visíveis */
+      }
+    }
+
+    header {   height: var(--header-height);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+  background-color: var(--accent-color);
+  color: white;
+  margin-bottom:12px; }
+}
     header h1 { font-size:18px; margin:0; }
-    header .brand { color:var(--muted); font-size:13px; margin-top:6px; }
+    header .brand { color:var(--muted); font-size:13px; }
 
     .panel {
       background:var(--card-bg);
@@ -210,34 +190,28 @@
     }
     body.dark footer { background:rgba(10,10,10,0.98); color:#ddd; }
     footer a { color:var(--accent); text-decoration:none; font-weight:700; }
-
-    /* responsive */
-    @media (max-width:1000px){
-      .col-left, .col-right { display:none; }
-      .col-center { width:100%; }
-      .page { padding:12px; }
-    }
   </style>
 </head>
 <body>
-  <div class="page">
-    <!-- COLUNA ESQUERDA: pesquisas (30%) -->
-    <div class="col-left">
       <header>
         <div>
-          <h1><img src="https://i.ibb.co/KxQgNLnp/awaken225.png" widht="265px" height="65px" ></h1>
-          <div class="brand">I - A versão mobile está em manutenção, se possível, use a versão web. II - As pesquisas ainda não apontam jogadores em bye week. </div>
+		&nbsp;<br>
+          <h1><img src="https://i.ibb.co/KxQgNLnp/awaken225.png" widht="265px" height="65px" ></h1> 
         </div>
       </header>
 
+  <div class="page">
+    <!-- COLUNA ESQUERDA: pesquisas (30%) -->
+    <div class="col-left">
       <!-- 1) Por usuário (agora a primeira) -->
       <div class="panel">
-        <h3>Como está a saúde do jogadores de todos os meus times?</h3>
+        <div class="brand"><b><red>Update 11/OUT</red></b><br> I - Fix para dispositivos moveis aplicado.<br> II - Em breve as pesquisas indicarão jogadores em bye week.</div>
+	</div>
+      <div class="panel">
+        <h3>Quem <b>não</b> joga nos meus times?</h3>
         <div class="row">
           <input id="username" type="text" placeholder="Usuário Sleeper (ex: molotovpigs)" />
-        </div>
-        <div class="row">
-          <button class="primary" onclick="buscarPorUsuario()">Buscar Usuário</button>
+          <button class="primary" onclick="buscarPorUsuario()">Verificar</button>
         </div>
         <div style="color:var(--muted);font-size:13px;margin-top:8px;">
           Exibe jogadores com status questionável em todos os seus times.Também permite copiar League ID.
@@ -246,41 +220,34 @@
 
       <!-- 2) Por League ID (agora a segunda) -->
       <div class="panel">
-        <h3>Quais os buracos na liga que eu jogo?</h3>
+        <h3>Quais os buracos na <b>liga</b> que eu jogo?</h3>
         <div class="row">
           <input id="leagueId" type="text" placeholder="League ID (Ex: 1200153826695323648)" />
-        </div>
-        <div class="row">
-          <button class="primary" onclick="buscarPorLiga()">Buscar Liga</button>
+          <button class="primary" onclick="buscarPorLiga()">Buscar</button>
         </div>
         <div style="color:var(--muted);font-size:13px;margin-top:8px;">
-          Exibe titulares não saudáveis. 
+          Exibe os jogadores não saudáveis de todos os times na liga pesquisada. <b>Dica</b>: Copie o league id na busca anterior.
         </div>
       </div>
 
       <!-- 3) Verificar Franchise Players -->
       <div class="panel">
-        <h3>Varredura de Franchise Players</h3>
+        <h3>Varredura de <b>Franchise</b> Players</h3>
         <div class="row">
           <input id="franchiseLeagueId" type="text" placeholder="League ID (Ex: 1234...)" />
-        </div>
-        <div class="row">
-          <input id="minFranchise" type="number" placeholder="Mínimo de titulares ≥" class="short" />
-          <label style="display:flex;align-items:center;gap:6px;">
-            <input id="onlyFailing" type="checkbox" /> Apenas times abaixo do mínimo.
-          </label>
-        </div>
-        <div class="row">
-          <button class="primary" onclick="buscarFranchisePlayers()">Verificar Franquias</button>
+          <input id="minFranchise" size=6 width=10 type="number" placeholder="≥ Titulares" class="short" /></div>
+	<div class=row>
+          <input id="onlyFailing" type="checkbox" /> Somente abaixo do mín.
+          <button class="primary" onclick="buscarFranchisePlayers()">Varrer Escalações</button>
         </div>
         <div style="color:var(--muted);font-size:13px;margin-top:8px;">
-          Quais os jogadores com status arriscado na sua franquia.
+          Potenciais riscos em cada franquia da sua Liga.
         </div>
       </div>
 
       <!-- 4) Procurar jogadores de franquia -->
       <div class="panel">
-        <h3> Precisando de Franchise Players? Busque aqui.</h3>
+        <h3> Precisando de Franchise Players?</h3>
         <div class="row">
           <select id="franchiseTeamSelect"></select>
         </div>
@@ -308,38 +275,19 @@
       <div id="resultado"></div>
     </div>
 
-    <!-- COLUNA DIREITA: reservado + dark mode top -->
-    <div class="col-right">
-      <div style="margin-top:18px;" class="panel">
-	 <!-- <div style="position:sticky; top:10px; display:flex; justify-content:flex-end;"> -->
-        <button class="dark-toggle" id="darkToggle">🌙 OFF</button>
-      <!--</div> -->
-        <img src="https://i.ibb.co/TMc5pJ0R/jogos-week6-pckt.png" alt="Jogos Semana 6 - 2025">
-	 </div>
-		<button id="toggle-debug">🪲 Debug</button>
-	<div id="debug-log" style="
-  display:none;
-  position:fixed;
-  bottom:0;
-  left:0;
-  width:100%;
-  max-height:40vh;
-  overflow:auto;
-  background:rgba(0,0,0,0.8);
-  color:#0f0;
-  font-family:monospace;
-  font-size:12px;
-  padding:8px;
-  z-index:9999;
-"></div>
-
-
+    <!-- COLUNA DIREITA: calendario -->
+    <div class="col-right">  <!-- style="margin-top:18px;" class="panel"> -->
+ 	<img src="https://i.ibb.co/Xk5qxq9W/jogos-week6-pckt-min.png" alt="Jogos Semana 6 - 2025">
     </div> <!-- fim col-right -->
   </div> <!-- fim page -->
 
   <footer>
+ <button class="dark-toggle" id="darkToggle">🌙 OFF</button> 
     <div id="accessCount">GMs em ação: 0</div>
-    <div><a href="mailto:scrum.moura@gmail.com">Algo errado? Novas ideias? Manda pra cá.</a></div>
+    <div><a href="mailto:scrum.moura@gmail.com">Algo errado? Novas ideias? Manda pra cá.</a> 
+    <!-- <button id="toggle-debug">🪲 Debug</button>
+    <div id="debug-log" style="display:none;position:fixed;bottom:0;left:0;width:100%;max-height:40vh;overflow:auto;background:rgba(0,0,0,0.8);color:#0f0;font-family:monospace;font-size:12px;padding:8px;z-index:9999;">
+</div> -->
   </footer>
 
 <script>
